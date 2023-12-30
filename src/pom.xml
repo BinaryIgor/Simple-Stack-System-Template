@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.binaryigor</groupId>
+    <artifactId>simple-stack-system-template</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Simple Stack System Template parent</name>
+
+    <modules>
+        <module>commons</module>
+        <module>apps</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <surefire.plugin.version>3.0.0-M4</surefire.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.excludedGroups>integration</junit.excludedGroups>
+
+        <!--tests dependencies-->
+        <junit.version>5.9.0</junit.version>
+        <assertj.version>3.23.1</assertj.version>
+        <jacoco.version>0.8.7</jacoco.version>
+        <testcontainers.version>1.17.6</testcontainers.version>
+        <wiremock.version>2.27.2</wiremock.version>
+
+        <!--dependencies-->
+        <spring.boot.version>3.2.1</spring.boot.version>
+        <postresql.driver.version>42.5.1</postresql.driver.version>
+        <hikari.version>3.4.2</hikari.version>
+        <jooq.version>3.14.7</jooq.version>
+        <slf4j.version>2.0.6</slf4j.version>
+        <jackson.version>2.14.0</jackson.version>
+        <resilience4j.version>2.0.2</resilience4j.version>
+        <java.jwt.version>4.0.0</java.jwt.version>
+        <caffeine.version>3.1.2</caffeine.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postresql.driver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${jooq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta</artifactId>
+                <version>${jooq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.resilience4j</groupId>
+                <artifactId>resilience4j-retry</artifactId>
+                <version>${resilience4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java.jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock-standalone</artifactId>
+                <version>${wiremock.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>allTests</id>
+            <properties>
+                <junit.excludedGroups>NONE</junit.excludedGroups>
+            </properties>
+        </profile>
+        <profile>
+            <id>testsReport</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <configuration>
+                            <!--TODO: revisit-->
+                            <!--                            <excludes>-->
+                            <!--                                <exclude>**/model/**</exclude>-->
+                            <!--                                <exclude>**/types/**</exclude>-->
+                            <!--                                <exclude>**/error/**</exclude>-->
+                            <!--                                <exclude>**/jooq/**</exclude>-->
+                            <!--                                <exclude>**/test/**</exclude>-->
+                            <!--                                <exclude>**/endpoint/**</exclude>-->
+                            <!--                                <exclude>**/*Config.*</exclude>-->
+                            <!--                                <exclude>**/*Module*</exclude>-->
+                            <!--                                <exclude>**/*Controller*</exclude>-->
+                            <!--                                <exclude>**/*Fake*</exclude>-->
+                            <!--                                <exclude>**/*MapperImpl.*</exclude>-->
+                            <!--                            </excludes>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+                <configuration>
+                    <excludedGroups>${junit.excludedGroups}</excludedGroups>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
