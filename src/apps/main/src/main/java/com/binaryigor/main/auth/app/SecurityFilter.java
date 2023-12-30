@@ -1,0 +1,120 @@
+package com.binaryigor.main.auth.app;
+
+import com.binaryigor.main._commons.exception.AccessForbiddenException;
+import com.binaryigor.main._commons.exception.InvalidAuthTokenException;
+import com.binaryigor.main._commons.exception.UnauthenticatedException;
+import com.binaryigor.main.auth.core.AuthTokenAuthenticator;
+import com.binaryigor.main.auth.core.AuthenticationResult;
+import jakarta.servlet.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
+
+import java.io.IOException;
+import java.time.Clock;
+import java.time.Duration;
+import java.util.Optional;
+
+public class SecurityFilter implements Filter {
+
+    private static final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
+    private static final String ACCESS_TOKEN_KEY = "accessToken";
+    private final AuthTokenAuthenticator authTokenAuthenticator;
+    private final SecurityRules securityRules;
+    private final Clock clock;
+    private final Duration issueNewTokenBeforeExpirationDuration;
+
+    public SecurityFilter(AuthTokenAuthenticator authTokenAuthenticator,
+                          SecurityRules securityRules,
+                          Clock clock,
+                          Duration issueNewTokenBeforeExpirationDuration) {
+        this.authTokenAuthenticator = authTokenAuthenticator;
+        this.securityRules = securityRules;
+        this.clock = clock;
+        this.issueNewTokenBeforeExpirationDuration = issueNewTokenBeforeExpirationDuration;
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        var request = (HttpServletRequest) servletRequest;
+        var response = (HttpServletResponse) servletResponse;
+
+        var endpoint = new SecurityEndpoint(request.getRequestURI(),
+                HttpMethod.valueOf(request.getMethod()));
+
+        try {
+            var token = accessTokenFromCookies(request);
+
+            var authResult = token.map(authTokenAuthenticator::authenticate);
+            authResult.ifPresent(r -> AuthenticatedUserRequestHolder.set(r.user()));
+
+            log.info("Auth result: {}", authResult);
+
+            securityRules.validateAccess(endpoint, authResult.map(AuthenticationResult::user));
+
+            authResult.ifPresent(r -> {
+                if (shouldIssueNewToken(r)) {
+                    issueNewToken(response, token.get());
+                }
+            });
+
+        } catch (UnauthenticatedException | InvalidAuthTokenException e) {
+            sendExceptionResponse(request, response, 401, e);
+        } catch (AccessForbiddenException e) {
+            sendExceptionResponse(request, response, 403, e);
+        } catch (Exception e) {
+            sendExceptionResponse(request, response, 400, e);
+        }
+
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private boolean shouldIssueNewToken(AuthenticationResult result) {
+        return Duration.between(clock.instant(), result.expiresAt())
+                .compareTo(issueNewTokenBeforeExpirationDuration) >= 0;
+    }
+
+    // TODO: better abstraction
+    private void issueNewToken(HttpServletResponse response, String currentToken) {
+        log.info("Issuing new token...");
+        var authToken = authTokenAuthenticator.refresh(currentToken);
+
+        var cookie = new Cookie(ACCESS_TOKEN_KEY, authToken.value());
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge((int) authToken.expiresAt().getEpochSecond());
+        cookie.setPath("/");
+        cookie.setAttribute("SameSite", "Strict");
+
+        response.addCookie(cookie);
+    }
+
+    private Optional<String> accessTokenFromCookies(HttpServletRequest request) {
+        return Optional.ofNullable(request.getCookies())
+                .map(cs -> {
+                    for (var c : cs) {
+                        if (c.getName().equals(ACCESS_TOKEN_KEY)) {
+                            return c.getValue();
+                        }
+                    }
+                    return null;
+                });
+    }
+
+    //TODO: sth better with exception
+    private void sendExceptionResponse(HttpServletRequest request,
+                                       HttpServletResponse response,
+                                       int status,
+                                       Throwable exception) {
+        log.warn("Sending redirect from {} status to {}: {} request", status, request.getMethod(), request.getRequestURI());
+        try {
+            response.setStatus(302);
+            response.setHeader("Location", "/user-auth/sign-in");
+        } catch (Exception e) {
+            log.error("Problem while writing response body to HttpServletResponse", e);
+        }
+    }
+}

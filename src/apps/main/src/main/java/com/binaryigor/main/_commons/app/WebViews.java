@@ -1,4 +1,4 @@
-package com.binaryigor.main._commons;
+package com.binaryigor.main._commons.app;
 
 import org.springframework.ui.Model;
 

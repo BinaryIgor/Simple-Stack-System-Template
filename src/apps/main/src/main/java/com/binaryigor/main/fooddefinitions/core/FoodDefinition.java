@@ -1,4 +1,4 @@
-package com.binaryigor.main.fooddefinitions.domain;
+package com.binaryigor.main.fooddefinitions.core;
 
 import java.util.UUID;
 

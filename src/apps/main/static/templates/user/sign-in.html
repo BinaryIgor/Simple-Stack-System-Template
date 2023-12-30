@@ -1,0 +1,21 @@
+<div class="p-4">
+    <form-container id="user-form"
+            form:hx-post="/user-auth/sign-in"
+            form:hx-target="#app"
+            submit:add:class="px-8 py-2 border-slate-400 border-2 rounded-md mt-4"
+            submit:value="Sign in">
+        <input-with-error input:name="email">
+        </input-with-error>
+        <input-with-error
+                input:type="password"
+                input:name="password">
+        </input-with-error>
+    </form-container>
+</div>
+
+<script>
+    document.getElementById("user-form").addEventListener("htmx:afterRequest", function(e) {
+        const error = e.detail.xhr.response;
+        this.afterSubmit({ error: error });
+    });
+</script>

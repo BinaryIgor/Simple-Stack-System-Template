@@ -1,9 +1,9 @@
 package com.binaryigor.main.fooddefinitions.app;
 
-import com.binaryigor.main._commons.WebViews;
-import com.binaryigor.main.fooddefinitions.domain.FoodDefinition;
-import com.binaryigor.main.fooddefinitions.domain.GetFoodDefinitionsHandler;
-import com.binaryigor.main.fooddefinitions.domain.GetFoodDefinitionsRequest;
+import com.binaryigor.main._commons.app.WebViews;
+import com.binaryigor.main.fooddefinitions.core.FoodDefinition;
+import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsHandler;
+import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
