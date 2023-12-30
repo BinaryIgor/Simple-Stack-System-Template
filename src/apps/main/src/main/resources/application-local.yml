@@ -1,0 +1,14 @@
+spring:
+  messages:
+    # TODO: hot reload
+    basename: "messages/messages"
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: "UTF-8"
+    prefix: file:src/main/resources/templates/
+  web:
+    resources: # Static resources
+      static-locations: ["file:src/main/resources/resources", "file:target/resources/"]
+      cache:
+        period: 0

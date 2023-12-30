@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{application.title}"></title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="${stylesPath}"/>
+    <!--TODO: dynamic js, better HTMX source-->
+    <script defer src="https://unpkg.com/htmx.org@1.9.3"></script>
+    <script defer src="/index.js"></script>
+</head>
+<body>
+<div hx-history="false" id="app" hx-history-elt>
+   <div th:replace="~{${template}}"></div>
+</div>
+</body>
+</html>
