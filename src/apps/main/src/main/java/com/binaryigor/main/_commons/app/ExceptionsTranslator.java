@@ -1,6 +1,6 @@
 package com.binaryigor.main._commons.app;
 
-import com.binaryigor.main._commons.exception.AppException;
+import com.binaryigor.main._commons.core.exception.AppException;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 

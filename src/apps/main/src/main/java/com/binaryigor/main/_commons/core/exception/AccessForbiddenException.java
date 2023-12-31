@@ -1,4 +1,4 @@
-package com.binaryigor.main._commons.exception;
+package com.binaryigor.main._commons.core.exception;
 
 public class AccessForbiddenException extends AppException {
 

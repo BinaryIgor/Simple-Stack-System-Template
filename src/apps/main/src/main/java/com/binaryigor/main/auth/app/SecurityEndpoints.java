@@ -1,6 +1,6 @@
 package com.binaryigor.main.auth.app;
 
-import com.binaryigor.main._contract.UserState;
+import com.binaryigor.main._contract.model.UserState;
 import org.springframework.http.HttpMethod;
 
 import java.util.List;

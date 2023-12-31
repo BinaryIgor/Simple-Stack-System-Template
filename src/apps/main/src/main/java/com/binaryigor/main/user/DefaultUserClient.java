@@ -1,7 +1,7 @@
 package com.binaryigor.main.user;
 
 import com.binaryigor.main._contract.UserAuthClient;
-import com.binaryigor.main._contract.UserAuthData;
+import com.binaryigor.main._contract.model.UserAuthData;
 import com.binaryigor.main._contract.UserClient;
 
 import java.util.Optional;

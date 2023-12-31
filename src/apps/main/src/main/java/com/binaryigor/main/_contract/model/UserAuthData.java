@@ -1,4 +1,4 @@
-package com.binaryigor.main._contract;
+package com.binaryigor.main._contract.model;
 
 import java.util.Set;
 import java.util.UUID;

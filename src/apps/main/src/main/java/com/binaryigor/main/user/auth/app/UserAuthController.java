@@ -1,8 +1,8 @@
 package com.binaryigor.main.user.auth.app;
 
 import com.binaryigor.main._commons.app.WebViews;
-import com.binaryigor.main._commons.exception.AppException;
-import com.binaryigor.main.user.auth.core.SignInFirstStepCommand;
+import com.binaryigor.main._commons.core.exception.AppException;
+import com.binaryigor.main.user.auth.core.model.SignInFirstStepCommand;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

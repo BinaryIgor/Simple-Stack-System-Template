@@ -1,4 +1,4 @@
-package com.binaryigor.main.auth.core;
+package com.binaryigor.main._contract.model;
 
 import java.time.Instant;
 

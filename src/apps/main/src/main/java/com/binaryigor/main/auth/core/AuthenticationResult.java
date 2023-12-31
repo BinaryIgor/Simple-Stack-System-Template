@@ -1,6 +1,6 @@
 package com.binaryigor.main.auth.core;
 
-import com.binaryigor.main._contract.AuthenticatedUser;
+import com.binaryigor.main._contract.model.AuthenticatedUser;
 
 import java.time.Instant;
 
