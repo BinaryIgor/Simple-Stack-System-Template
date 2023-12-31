@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public class AuthenticatedUserRequestHolder {
 
+    //TODO: set user locale!
     public static void set(AuthenticatedUser user) {
         HttpRequestAttributes.set(HttpRequestAttributes.USER_ATTRIBUTE, user);
         HttpRequestAttributes.set(HttpRequestAttributes.USER_ID_ATTRIBUTE, user.id().toString());

@@ -13,11 +13,17 @@ public class GlobalExceptionsHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionsHandler.class);
 
+    private final ExceptionsTranslator exceptionsTranslator;
+
+    public GlobalExceptionsHandler(ExceptionsTranslator exceptionsTranslator) {
+        this.exceptionsTranslator = exceptionsTranslator;
+    }
+
     //TODO: sth better
     @ExceptionHandler
     ResponseEntity<String> handleAppException(AppException exception) {
         log.warn("Unhandled error:", exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(String.join(", ", exception.toErrors()));
+                .body(exceptionsTranslator.translated(exception));
     }
 }

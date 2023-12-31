@@ -13,7 +13,8 @@
     <script type="module" src="/components.js"></script>
 </head>
 <body>
-<info-modal id="error-modal" title="Something went wrong..."></info-modal>
+<info-modal id="error-modal" title="Something went wrong..."
+    title:add:class="text-red-500"></info-modal>
 <div hx-history="false" id="app" hx-history-elt>
    <div th:replace="~{${template}}"></div>
 </div>
