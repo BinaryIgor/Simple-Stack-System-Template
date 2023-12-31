@@ -1,6 +1,6 @@
 package com.binaryigor.main.fooddefinitions.app;
 
-import com.binaryigor.main._commons.app.WebViews;
+import com.binaryigor.main._commons.app.HTMX;
 import com.binaryigor.main.fooddefinitions.core.FoodDefinition;
 import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsHandler;
 import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsRequest;
@@ -26,7 +26,7 @@ public class FoodDefinitionsController {
     String getDefinition(@PathVariable String name,
                          Model model) {
         model.addAttribute("name", name);
-        return WebViews.fragmentOrFullPage(model, "food-definition");
+        return HTMX.fragmentOrFullPage(model, "food-definition");
     }
 
     @GetMapping
@@ -39,6 +39,6 @@ public class FoodDefinitionsController {
 
         model.addAttribute("definitions", definitions);
 
-        return WebViews.fragmentOrFullPage(model, "food-definitions");
+        return HTMX.fragmentOrFullPage(model, "food-definitions");
     }
 }

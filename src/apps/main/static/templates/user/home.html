@@ -1,0 +1,7 @@
+<h1>Hello user!</h1>
+<div th:text="${user.name()}"></div>
+<div th:text="${user.email()}"></div>
+<div class="absolute top-0 right-0 p-2 text-xl font-bold cursor-pointer"
+     hx-post="/user-auth/sign-out"
+     hx-target="#app"
+     th:text="#{signOut}"></div>

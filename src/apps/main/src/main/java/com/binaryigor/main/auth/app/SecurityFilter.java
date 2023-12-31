@@ -1,12 +1,12 @@
 package com.binaryigor.main.auth.app;
 
+import com.binaryigor.main._commons.app.Cookies;
 import com.binaryigor.main._commons.core.exception.AccessForbiddenException;
 import com.binaryigor.main._commons.core.exception.InvalidAuthTokenException;
 import com.binaryigor.main._commons.core.exception.UnauthenticatedException;
 import com.binaryigor.main.auth.core.AuthTokenAuthenticator;
 import com.binaryigor.main.auth.core.AuthenticationResult;
 import jakarta.servlet.*;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -16,23 +16,24 @@ import org.springframework.http.HttpMethod;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.Duration;
-import java.util.Optional;
 
 public class SecurityFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
-    private static final String ACCESS_TOKEN_KEY = "accessToken";
     private final AuthTokenAuthenticator authTokenAuthenticator;
     private final SecurityRules securityRules;
+    private final Cookies cookies;
     private final Clock clock;
     private final Duration issueNewTokenBeforeExpirationDuration;
 
     public SecurityFilter(AuthTokenAuthenticator authTokenAuthenticator,
                           SecurityRules securityRules,
+                          Cookies cookies,
                           Clock clock,
                           Duration issueNewTokenBeforeExpirationDuration) {
         this.authTokenAuthenticator = authTokenAuthenticator;
         this.securityRules = securityRules;
+        this.cookies = cookies;
         this.clock = clock;
         this.issueNewTokenBeforeExpirationDuration = issueNewTokenBeforeExpirationDuration;
     }
@@ -46,7 +47,7 @@ public class SecurityFilter implements Filter {
                 HttpMethod.valueOf(request.getMethod()));
 
         try {
-            var token = accessTokenFromCookies(request);
+            var token = cookies.tokenValue(request.getCookies());
 
             var authResult = token.map(authTokenAuthenticator::authenticate);
             authResult.ifPresent(r -> AuthenticatedUserRequestHolder.set(r.user()));
@@ -61,47 +62,24 @@ public class SecurityFilter implements Filter {
                 }
             });
 
+            filterChain.doFilter(servletRequest, servletResponse);
         } catch (UnauthenticatedException | InvalidAuthTokenException e) {
             sendExceptionResponse(request, response, 401, e);
         } catch (AccessForbiddenException e) {
             sendExceptionResponse(request, response, 403, e);
-        } catch (Exception e) {
-            sendExceptionResponse(request, response, 400, e);
         }
-
-        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     private boolean shouldIssueNewToken(AuthenticationResult result) {
         return Duration.between(clock.instant(), result.expiresAt())
-                .compareTo(issueNewTokenBeforeExpirationDuration) >= 0;
+                .compareTo(issueNewTokenBeforeExpirationDuration) <= 0;
     }
 
     // TODO: better abstraction
     private void issueNewToken(HttpServletResponse response, String currentToken) {
         log.info("Issuing new token...");
         var authToken = authTokenAuthenticator.refresh(currentToken);
-
-        var cookie = new Cookie(ACCESS_TOKEN_KEY, authToken.value());
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge((int) authToken.expiresAt().getEpochSecond());
-        cookie.setPath("/");
-        cookie.setAttribute("SameSite", "Strict");
-
-        response.addCookie(cookie);
-    }
-
-    private Optional<String> accessTokenFromCookies(HttpServletRequest request) {
-        return Optional.ofNullable(request.getCookies())
-                .map(cs -> {
-                    for (var c : cs) {
-                        if (c.getName().equals(ACCESS_TOKEN_KEY)) {
-                            return c.getValue();
-                        }
-                    }
-                    return null;
-                });
+        response.addCookie(cookies.token(authToken.value(), authToken.expiresAt()));
     }
 
     //TODO: sth better with exception

@@ -2,16 +2,19 @@ package com.binaryigor.main.user.auth.core.handler;
 
 import com.binaryigor.main._contract.AuthClient;
 import com.binaryigor.main._contract.model.UserState;
+import com.binaryigor.main.user.auth.core.SecondFactorAuthenticator;
+import com.binaryigor.main.user.auth.core.model.CurrentUserData;
 import com.binaryigor.main.user.auth.core.model.SignInFirstStepCommand;
+import com.binaryigor.main.user.auth.core.model.SignedInUser;
 import com.binaryigor.main.user.auth.core.model.SignedInUserStep;
-import com.binaryigor.main.user.common.PasswordHasher;
-import com.binaryigor.main.user.common.UserExceptions;
-import com.binaryigor.main.user.common.UserValidator;
-import com.binaryigor.main.user.common.exception.NotMatchedPasswordException;
-import com.binaryigor.main.user.common.exception.UserNotActivatedException;
-import com.binaryigor.main.user.common.model.EmailUser;
-import com.binaryigor.main.user.common.model.User;
-import com.binaryigor.main.user.common.repository.UserRepository;
+import com.binaryigor.main.user.common.core.PasswordHasher;
+import com.binaryigor.main.user.common.core.UserExceptions;
+import com.binaryigor.main.user.common.core.UserValidator;
+import com.binaryigor.main.user.common.core.exception.NotMatchedPasswordException;
+import com.binaryigor.main.user.common.core.exception.UserNotActivatedException;
+import com.binaryigor.main.user.common.core.model.EmailUser;
+import com.binaryigor.main.user.common.core.model.User;
+import com.binaryigor.main.user.common.core.repository.UserRepository;
 
 public class SignInFirstStepHandler {
 
@@ -22,12 +25,10 @@ public class SignInFirstStepHandler {
 
     public SignInFirstStepHandler(AuthClient authClient,
                                   UserRepository userRepository,
-                                  UserAuthRepository userAuthRepository,
                                   PasswordHasher passwordHasher,
                                   SecondFactorAuthenticator secondFactorAuthenticator) {
         this.authClient = authClient;
         this.userRepository = userRepository;
-        this.userAuthRepository = userAuthRepository;
         this.passwordHasher = passwordHasher;
         this.secondFactorAuthenticator = secondFactorAuthenticator;
     }
@@ -41,7 +42,7 @@ public class SignInFirstStepHandler {
             return SignedInUserStep.firstStep();
         }
 
-        var signedInUser = SignedInUserMapper.fromUser(user, userAuthRepository, authClient);
+        var signedInUser = new SignedInUser(CurrentUserData.fromUser(user), authClient.ofUser(user.id()));
 
         return SignedInUserStep.onlyStep(signedInUser);
     }

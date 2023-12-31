@@ -1,13 +1,17 @@
 package com.binaryigor.main.auth;
 
+import com.binaryigor.main._commons.app.Cookies;
 import com.binaryigor.main._commons.core.PropertiesConverter;
+import com.binaryigor.main._contract.AuthClient;
 import com.binaryigor.main._contract.UserAuthClient;
 import com.binaryigor.main.auth.app.JwtConfig;
 import com.binaryigor.main.auth.app.SecurityEndpoints;
 import com.binaryigor.main.auth.app.SecurityFilter;
 import com.binaryigor.main.auth.app.SecurityRules;
 import com.binaryigor.main.auth.core.AuthTokenAuthenticator;
+import com.binaryigor.main.auth.core.AuthTokenCreator;
 import com.binaryigor.main.auth.core.JwtAuthTokens;
+import com.binaryigor.main.auth.core.TheAuthClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -50,10 +54,16 @@ public class AuthModuleConfig {
     @Bean
     SecurityFilter securityFilter(AuthTokenAuthenticator authTokenAuthenticator,
                                   SecurityRules securityRules,
+                                  Cookies cookies,
                                   Clock clock,
                                   @Value("${jwt-issue-new-token-before-expiration-duration}")
                                   Duration issueNewTokenBeforeExpirationDuration) {
-        return new SecurityFilter(authTokenAuthenticator, securityRules, clock,
+        return new SecurityFilter(authTokenAuthenticator, securityRules, cookies, clock,
                 issueNewTokenBeforeExpirationDuration);
+    }
+
+    @Bean
+    AuthClient authClient(AuthTokenCreator authTokenCreator) {
+        return new TheAuthClient(authTokenCreator);
     }
 }

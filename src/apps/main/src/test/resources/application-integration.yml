@@ -1,0 +1,15 @@
+#TODO: improve this naive config
+spring:
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: "UTF-8"
+    prefix: file:static/templates/
+  web:
+    resources: # Static resources
+      static-locations: ["file:static/assets", "file:static/target/assets"]
+      cache:
+        period: 0
+
+jwt:
+  token-key: "qxg+hQ=="

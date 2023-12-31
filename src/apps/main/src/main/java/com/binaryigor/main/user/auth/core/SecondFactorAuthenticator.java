@@ -4,8 +4,9 @@ import com.binaryigor.main._commons.core.FieldValidator;
 import com.binaryigor.main.user.auth.core.exception.SecondFactorAuthenticationException;
 import com.binaryigor.main.user.auth.core.model.SecondFactorAuthentication;
 import com.binaryigor.main.user.auth.core.repository.SecondFactorAuthenticationRepository;
-import com.binaryigor.main.user.common.UserExceptions;
-import com.binaryigor.main.user.common.model.EmailUser;
+import com.binaryigor.main.user.common.core.UserExceptions;
+import com.binaryigor.main.user.common.core.model.EmailUser;
+import com.binaryigor.tools.Randoms;
 
 import java.time.Clock;
 import java.util.concurrent.TimeUnit;
