@@ -1,14 +1,13 @@
 package com.binaryigor.tools;
 
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FilePathFinder {
 
-    public static String templatesUpFromCurrentPath() {
-        return upFromCurrentPath("templates").toString();
+    public static String emailTemplatesUpFromCurrentPath() {
+        return upFromCurrentPath("email-templates").toString();
     }
 
     public static String repoRootUpFromCurrentPath() {

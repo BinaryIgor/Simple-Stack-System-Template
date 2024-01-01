@@ -1,7 +1,7 @@
 package com.binaryigor.main.auth.app;
 
 
-import com.binaryigor.main._commons.app.HttpRequestAttributes;
+import com.binaryigor.main._common.app.HttpRequestAttributes;
 import com.binaryigor.main._contract.model.AuthenticatedUser;
 
 import java.util.Optional;

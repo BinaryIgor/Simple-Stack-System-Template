@@ -1,0 +1,53 @@
+codeVariables {
+    user, activationUrl, signUpUrl
+}
+
+translations {
+    pl {
+        subject: Aktywacja konta
+        message1: Aby aktywować konto, zapraszamy
+        activationUrlAlias: tutaj
+        message2: Link jest ważny 15 minut. Gdyby wygasł, zawsze możesz zarejestrować się ponownie
+        signUpUrlAlias: tutaj
+    }
+    en {
+        subject: Account activation
+        message1: To activate your account, we invite you
+        activationUrlAlias: here
+        message2: The link is valid for 15 minutes. If it expires, you can always sign up again
+        signUpUrlAlias: here
+    }
+}
+
+html {
+    <!DOCTYPE html>
+    <html lang="${language}">
+
+    <head>
+        <meta charset="UTF-8">
+    </head>
+
+    <body>
+        #{greetings.html}
+
+        <p style="${textStyle}">
+            ${message1} <a style="${linkStyle}" href="${activationUrl}">${activationUrlAlias}</a>.
+        </p>
+        <p style="${textStyle}">
+            ${message2} <a style="${linkStyle}" href="${signUpUrl}">${signUpUrlAlias}</a>.
+        </p>
+
+        #{footer.html}
+    </body>
+
+    </html>
+}
+
+text {
+    #{greetings.txt}
+
+    ${message1} ${activationUrlAlias}: ${activationUrl}.
+    ${message2} ${signUpUrlAlias}: ${signUpUrl}.
+
+    #{footer.txt}
+}

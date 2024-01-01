@@ -1,7 +1,7 @@
 package com.binaryigor.main.user.common.core;
 
-import com.binaryigor.main._commons.core.FieldValidator;
-import com.binaryigor.main._commons.core.exception.InvalidNameException;
+import com.binaryigor.main._common.core.FieldValidator;
+import com.binaryigor.main._common.core.exception.InvalidNameException;
 import com.binaryigor.main.user.common.core.exception.InvalidEmailException;
 import com.binaryigor.main.user.common.core.exception.InvalidPasswordException;
 

@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.common.core.exception;
 
-import com.binaryigor.main._commons.core.exception.ConflictException;
+import com.binaryigor.main._common.core.exception.ConflictException;
 
 public class EmailTakenException extends ConflictException {
 

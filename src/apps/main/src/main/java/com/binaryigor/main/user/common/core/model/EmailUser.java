@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.common.core.model;
 
-import com.binaryigor.main._commons.core.AppLanguage;
+import com.binaryigor.main._common.core.AppLanguage;
 
 import java.util.UUID;
 

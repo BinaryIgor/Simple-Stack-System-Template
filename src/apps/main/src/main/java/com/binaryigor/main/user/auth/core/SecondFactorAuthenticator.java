@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.auth.core;
 
-import com.binaryigor.main._commons.core.FieldValidator;
+import com.binaryigor.main._common.core.FieldValidator;
 import com.binaryigor.main.user.auth.core.exception.SecondFactorAuthenticationException;
 import com.binaryigor.main.user.auth.core.model.SecondFactorAuthentication;
 import com.binaryigor.main.user.auth.core.repository.SecondFactorAuthenticationRepository;

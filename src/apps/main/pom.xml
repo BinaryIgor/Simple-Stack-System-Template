@@ -41,6 +41,11 @@
             <artifactId>tools</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.binaryigor</groupId>
+            <artifactId>email</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

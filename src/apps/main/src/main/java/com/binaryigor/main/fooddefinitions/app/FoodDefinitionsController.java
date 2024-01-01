@@ -1,6 +1,6 @@
 package com.binaryigor.main.fooddefinitions.app;
 
-import com.binaryigor.main._commons.app.HTMX;
+import com.binaryigor.main._common.app.HTMX;
 import com.binaryigor.main.fooddefinitions.core.FoodDefinition;
 import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsHandler;
 import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsRequest;

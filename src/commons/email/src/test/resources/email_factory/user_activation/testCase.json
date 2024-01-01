@@ -1,0 +1,42 @@
+{
+  "input": {
+    "from": {
+      "name": "admin12",
+      "email": "admin12@binaryigor.com"
+    },
+    "to": {
+      "name": "UserX",
+      "email": "user-x@gmail.com"
+    },
+    "language": "EN",
+    "name": "user_activation",
+    "variables": {
+      "user": "UserX",
+      "activationUrl": "https://binaryigor.com/sign-in?token=988jxAadada9",
+      "signUpUrl": "https://binaryigor.com/sign-up"
+    },
+    "emailTag": "user_activation",
+    "emailMetadata": {
+      "userId": "91234",
+      "type": "USER_ACTIVATION"
+    }
+  },
+  "output": {
+    "from": {
+      "name": "admin12",
+      "email": "admin12@binaryigor.com"
+    },
+    "to": {
+      "name": "UserX",
+      "email": "user-x@gmail.com"
+    },
+    "subject": "Your account is ready to use!",
+    "htmlMessage": null,
+    "textMessage": null,
+    "tag": "user_activation",
+    "metadata": {
+      "userId": "91234",
+      "type": "USER_ACTIVATION"
+    }
+  }
+}

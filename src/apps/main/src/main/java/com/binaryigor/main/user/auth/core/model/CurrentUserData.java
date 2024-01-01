@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.auth.core.model;
 
-import com.binaryigor.main._commons.core.AppLanguage;
+import com.binaryigor.main._common.core.AppLanguage;
 import com.binaryigor.main._contract.model.UserRole;
 import com.binaryigor.main._contract.model.UserState;
 import com.binaryigor.main.user.common.core.model.User;

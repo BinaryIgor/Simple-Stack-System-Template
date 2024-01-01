@@ -1,0 +1,42 @@
+codeVariables {
+    user, code
+}
+
+translations {
+    pl {
+        subject: Kod weryfikacji
+        message: Oto Twój kod weryfikacji, ważny 5 minut:
+    }
+    en {
+        subject: Verification code
+        message: Here is your verification code, valid for 5 minutes:
+    }
+}
+
+html {
+    <!DOCTYPE html>
+    <html lang="${language}">
+
+    <head>
+        <meta charset="UTF-8">
+    </head>
+
+    <body>
+        #{greetings.html}
+
+        <p style="${textStyle}">
+            ${message} <strong>${code}</strong>
+        </p>
+
+        #{footer.html}
+    </body>
+    </html>
+}
+
+text {
+    #{greetings.txt}
+
+    ${message} ${code}
+
+    #{footer.txt}
+}

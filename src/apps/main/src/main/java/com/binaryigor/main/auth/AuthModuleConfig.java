@@ -1,7 +1,6 @@
 package com.binaryigor.main.auth;
 
-import com.binaryigor.main._commons.app.Cookies;
-import com.binaryigor.main._commons.core.PropertiesConverter;
+import com.binaryigor.main._common.app.Cookies;
 import com.binaryigor.main._contract.AuthClient;
 import com.binaryigor.main._contract.UserAuthClient;
 import com.binaryigor.main.auth.app.JwtConfig;
@@ -12,6 +11,7 @@ import com.binaryigor.main.auth.core.AuthTokenAuthenticator;
 import com.binaryigor.main.auth.core.AuthTokenCreator;
 import com.binaryigor.main.auth.core.JwtAuthTokens;
 import com.binaryigor.main.auth.core.TheAuthClient;
+import com.binaryigor.tools.PropertiesConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

@@ -30,3 +30,20 @@ jwt:
   token-duration: "PT24H"
 
 jwt-issue-new-token-before-expiration-duration: "PT5M"
+
+email:
+  fake-server: true
+  templates-dir: "${TEMPLATES_DIR:/email-templates}"
+  postmark-api-token: "${POSTMARK_API_TOKEN}"
+  postmark-webhook-token: "${POSTMARK_WEBHOOK_TOKEN}"
+  frontend-domain: "https://binaryigor.com"
+  from-email:
+    name: "Simple Stack System Template App"
+    email: "app@binaryigor.com"
+  user:
+    # TODO: prettier url
+    user-activation-url: "/user-auth/sign-in"
+    sign-up-url: "/user-auth/sign-up"
+    email-change-confirmation-url: "user"
+    password-reset-url: "/user-auth/forgot-password"
+    new-password-url: "/user-auth/set-new-password"

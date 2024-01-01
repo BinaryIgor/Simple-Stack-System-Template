@@ -1,0 +1,45 @@
+codeVariables {
+    user, url
+}
+
+translations {
+    pl {
+        subject: ${user}: Zmiana maila idzie
+        message: Wejdź se
+        urlAlias: tu
+    }
+    en {
+        subject: 12
+        message: 12
+        urlAlias: 12
+    }
+}
+
+html {
+    <!DOCTYPE html>
+    <html lang="${language}">
+
+    <head>
+        <meta charset="UTF-8">
+    </head>
+
+    <body>
+        <h2>${greetings}</h2>
+
+        <p style="${textStyle}">
+            ${message} <a style="${linkStyle}" href="${url}">${urlAlias}.</a>
+        </p>
+
+        <h3>${footer}</h3>
+    </body>
+
+    </html>
+}
+
+text {
+    ${greetings}
+
+    ${message} ${urlAlias}: ${url}.
+
+    ${footer}
+}

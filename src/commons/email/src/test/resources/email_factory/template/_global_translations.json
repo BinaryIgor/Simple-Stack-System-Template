@@ -1,0 +1,10 @@
+{
+  "PL": {
+    "greetings": "Witaj ${user},",
+    "footer": "App PL"
+  },
+  "EN": {
+    "greetings": "Hello ${user},",
+    "footer": "App EN"
+  }
+}

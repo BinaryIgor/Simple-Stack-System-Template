@@ -1,9 +1,9 @@
 package com.binaryigor.main.auth.app;
 
-import com.binaryigor.main._commons.app.Cookies;
-import com.binaryigor.main._commons.core.exception.AccessForbiddenException;
-import com.binaryigor.main._commons.core.exception.InvalidAuthTokenException;
-import com.binaryigor.main._commons.core.exception.UnauthenticatedException;
+import com.binaryigor.main._common.app.Cookies;
+import com.binaryigor.main._common.core.exception.AccessForbiddenException;
+import com.binaryigor.main._common.core.exception.InvalidAuthTokenException;
+import com.binaryigor.main._common.core.exception.UnauthenticatedException;
 import com.binaryigor.main.auth.core.AuthTokenAuthenticator;
 import com.binaryigor.main.auth.core.AuthenticationResult;
 import jakarta.servlet.*;

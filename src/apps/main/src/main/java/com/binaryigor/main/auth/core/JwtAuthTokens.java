@@ -3,7 +3,7 @@ package com.binaryigor.main.auth.core;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.binaryigor.main._commons.core.exception.InvalidAuthTokenException;
+import com.binaryigor.main._common.core.exception.InvalidAuthTokenException;
 import com.binaryigor.main._contract.model.AuthToken;
 import com.binaryigor.main._contract.UserAuthClient;
 import org.slf4j.Logger;

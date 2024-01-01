@@ -1,6 +1,6 @@
 package com.binaryigor.main.auth.core;
 
-import com.binaryigor.main._commons.core.exception.UnauthenticatedException;
+import com.binaryigor.main._common.core.exception.UnauthenticatedException;
 import com.binaryigor.main._contract.AuthClient;
 import com.binaryigor.main._contract.AuthUserClient;
 import com.binaryigor.main._contract.model.AuthToken;

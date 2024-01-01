@@ -2,8 +2,8 @@ package com.binaryigor.main.auth.app;
 
 import com.binaryigor.main._contract.model.AuthenticatedUser;
 import com.binaryigor.main._contract.model.UserState;
-import com.binaryigor.main._commons.core.exception.AccessForbiddenException;
-import com.binaryigor.main._commons.core.exception.UnauthenticatedException;
+import com.binaryigor.main._common.core.exception.AccessForbiddenException;
+import com.binaryigor.main._common.core.exception.UnauthenticatedException;
 
 import java.util.Optional;
 import java.util.function.BiPredicate;

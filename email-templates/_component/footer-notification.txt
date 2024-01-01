@@ -1,0 +1,4 @@
+${footer},
+${appUrl}
+
+P.S. ${psFooterNotification}

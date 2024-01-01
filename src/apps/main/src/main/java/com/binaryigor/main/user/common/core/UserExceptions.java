@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.common.core;
 
-import com.binaryigor.main._commons.core.exception.NotFoundException;
+import com.binaryigor.main._common.core.exception.NotFoundException;
 import com.binaryigor.main.user.common.core.model.ActivationTokenId;
 
 import java.util.UUID;

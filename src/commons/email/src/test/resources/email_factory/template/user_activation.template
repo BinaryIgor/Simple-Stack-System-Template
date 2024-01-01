@@ -1,0 +1,48 @@
+codeVariables {
+    user, activationUrl, signUpUrl
+}
+
+translations {
+    pl {
+        subject: ---
+    }
+    en {
+        subject: Your account is ready to use!
+        greetings: Hello ${user}!
+        activateMessage: To activate your account, go
+        activationUrlAlias: here
+        problemsMessage: In case of problems, you can always sign up again
+        signUpUrlAlias: here
+    }
+}
+
+templateVariables {
+    h2Style: width: 200px; height: 300px
+}
+
+html {
+    <!DOCTYPE html>
+    <html lang="${language}">
+
+    <head>
+        <meta charset="UTF-8">
+    </head>
+
+    <body>
+        <h2 style="${h2Style}">${greetings}</h2>
+
+        <p style="${textStyle}">
+            ${activateMessage} <a style="${linkStyle}" href="${activationUrl}">${activationUrlAlias}.</a>
+            ${problemsMessage} <a style="${linkStyle}" href="${signUpUrl}">${signUpUrlAlias}.</a>
+        </p>
+    </body>
+
+    </html>
+}
+
+text {
+    ${greetings}
+
+    ${activateMessage} ${activationUrlAlias}: ${activationUrl}.
+    ${problemsMessage} ${signUpUrlAlias}: ${signUpUrl}.
+}

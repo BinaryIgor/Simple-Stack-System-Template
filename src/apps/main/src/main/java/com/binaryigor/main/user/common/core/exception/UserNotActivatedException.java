@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.common.core.exception;
 
-import com.binaryigor.main._commons.core.exception.AccessForbiddenException;
+import com.binaryigor.main._common.core.exception.AccessForbiddenException;
 
 public class UserNotActivatedException extends AccessForbiddenException {
 

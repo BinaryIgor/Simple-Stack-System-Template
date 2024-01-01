@@ -17,6 +17,7 @@
         <module>tools</module>
         <module>types</module>
         <module>test</module>
+        <module>email</module>
     </modules>
 
     <dependencies>
@@ -30,6 +31,11 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

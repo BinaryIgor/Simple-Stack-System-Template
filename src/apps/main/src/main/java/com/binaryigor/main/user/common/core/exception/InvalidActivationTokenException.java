@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.common.core.exception;
 
-import com.binaryigor.main._commons.core.exception.AppException;
+import com.binaryigor.main._common.core.exception.AppException;
 import com.binaryigor.main.user.common.core.model.ActivationTokenId;
 
 public class InvalidActivationTokenException extends AppException {

@@ -6,9 +6,13 @@ spring:
     prefix: file:static/templates/
   web:
     resources: # Static resources
-      static-locations: ["file:static/assets", "file:static/target/assets"]
+      static-locations: [ "file:static/assets", "file:static/target/assets" ]
       cache:
         period: 0
 
 jwt:
   token-key: "qxg+hQ=="
+
+email:
+  postmark-api-token: "postmark-api-token"
+  postmark-webhook-token: "postmark-webhook-token"

@@ -1,0 +1,4 @@
+Hello UserX!
+
+To activate your account, go here: https://binaryigor.com/sign-in?token=988jxAadada9.
+In case of problems, you can always sign up again here: https://binaryigor.com/sign-up.

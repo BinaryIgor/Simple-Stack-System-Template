@@ -1,6 +1,6 @@
 package com.binaryigor.main.user.home.app;
 
-import com.binaryigor.main._commons.app.HTMX;
+import com.binaryigor.main._common.app.HTMX;
 import com.binaryigor.main._contract.AuthUserClient;
 import com.binaryigor.main.user.home.core.GetCurrentUserDataHandler;
 import org.springframework.stereotype.Controller;

@@ -1,8 +1,8 @@
 package com.binaryigor.main.user.auth.app;
 
-import com.binaryigor.main._commons.app.Cookies;
-import com.binaryigor.main._commons.app.HTMX;
-import com.binaryigor.main._commons.core.exception.AppException;
+import com.binaryigor.main._common.app.Cookies;
+import com.binaryigor.main._common.app.HTMX;
+import com.binaryigor.main._common.core.exception.AppException;
 import com.binaryigor.main.user.auth.core.handler.SignInFirstStepHandler;
 import com.binaryigor.main.user.auth.core.model.SignInFirstStepCommand;
 import jakarta.servlet.http.HttpServletRequest;
