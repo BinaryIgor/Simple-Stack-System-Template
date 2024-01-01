@@ -1,6 +1,7 @@
 package com.binaryigor.main.auth.app;
 
 import com.binaryigor.main._common.app.Cookies;
+import com.binaryigor.main._common.app.HTMX;
 import com.binaryigor.main._common.core.exception.AccessForbiddenException;
 import com.binaryigor.main._common.core.exception.InvalidAuthTokenException;
 import com.binaryigor.main._common.core.exception.UnauthenticatedException;
@@ -90,7 +91,7 @@ public class SecurityFilter implements Filter {
         log.warn("Sending redirect from {} status to {}: {} request", status, request.getMethod(), request.getRequestURI());
         try {
             response.setStatus(302);
-            response.setHeader("Location", "/user-auth/sign-in");
+            response.setHeader("Location", "/sign-in");
         } catch (Exception e) {
             log.error("Problem while writing response body to HttpServletResponse", e);
         }

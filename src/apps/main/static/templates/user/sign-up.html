@@ -1,0 +1,33 @@
+<h1 class="text-2xl font-bold" th:text="#{signUpHeader}"></h1>
+<form-container id="sign-up-form"
+                form:hx-post="/sign-up"
+                form:hx-target="#app"
+                submit:add:class="button-like mt-4"
+                submit:value="Sign Up">
+    <input-with-error
+            input:name="email"
+            th:input:placeholder="#{signUpEmailPlaceholder}">
+    </input-with-error>
+    <input-with-error input:name="name"
+                      th:input:placeholder="#{signUpNamePlaceholder}">
+    </input-with-error>
+    <input-with-error
+            input:type="password"
+            input:name="password"
+            th:input:placeholder="#{signUpPasswordPlaceholder}">
+    </input-with-error>
+    <!--TODO: language from proper source-->
+    <input type="hidden" name="language" value="EN">
+</form-container>
+
+<div class="mt-8 mb-2 font-bold" th:text="#{signUpOrSignIn}"></div>
+
+<button class="button-like mt-4"
+        hx-target="#app" hx-get="/sign-in" hx-push-url="/sign-in" th:text="#{signIn}"></button>
+
+<script>
+    document.getElementById("sign-up-form").addEventListener("htmx:afterRequest", function(e) {
+        const error = e.detail.xhr.response;
+        this.afterSubmit({ error: error });
+    });
+</script>

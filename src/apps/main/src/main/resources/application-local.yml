@@ -16,3 +16,4 @@ jwt:
 email:
   postmark-api-token: "postmark-api-token"
   postmark-webhook-token: "postmark-webhook-token"
+  frontend-domain: "http://localhost:8080"

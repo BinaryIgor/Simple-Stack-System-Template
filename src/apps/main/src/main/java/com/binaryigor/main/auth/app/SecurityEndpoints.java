@@ -9,9 +9,16 @@ public class SecurityEndpoints {
 
     public static final String ADMIN = "/admin";
     public static final String WEBHOOKS = "/webhooks";
-    private static final String USER_AUTH = "/user-auth";
     // This is fine since actuator is running on not-exposed to public port
-    public static final List<String> PUBLIC_ENDPOINTS = List.of(USER_AUTH, WEBHOOKS, "/actuator");
+    public static final List<String> PUBLIC_ENDPOINTS = List.of(WEBHOOKS, "/actuator",
+            "/sign-in",
+            "/sign-up",
+            "/after-sign-up",
+            "/sign-in-second-step",
+            "/activate-account",
+            "/reset-password",
+            "/after-reset-password",
+            "/set-new-password");
     private static final List<String> ASSETS_ENDPOINTS = List.of(".css", ".js");
 
     public static boolean isPublic(SecurityEndpoint endpoint) {

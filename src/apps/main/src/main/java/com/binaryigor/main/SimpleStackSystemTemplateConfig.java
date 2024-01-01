@@ -6,6 +6,10 @@ import com.binaryigor.email.server.PostmarkEmailServer;
 import com.binaryigor.email.server.ToConsoleEmailServer;
 import com.binaryigor.main._common.app.EmailModuleProvider;
 import com.binaryigor.tools.PropertiesConverter;
+import com.binaryigor.types.Transactions;
+import com.binaryigor.types.event.AppEvents;
+import com.binaryigor.types.event.AppEventsPublisher;
+import com.binaryigor.types.event.InMemoryEvents;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +20,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.time.Clock;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 @Configuration
 @EnableConfigurationProperties(EmailProperties.class)
@@ -35,7 +40,7 @@ public class SimpleStackSystemTemplateConfig {
         var source = new ReloadableResourceBundleMessageSource();
         source.setBasenames("file:static/messages/messages",
                 "file:static/messages/error-messages");
-        source.setCacheSeconds(10);
+        source.setCacheSeconds(1);
         source.setUseCodeAsDefaultMessage(true);
         return source;
     }
@@ -57,5 +62,31 @@ public class SimpleStackSystemTemplateConfig {
     @Bean
     Clock clock() {
         return Clock.systemUTC();
+    }
+
+    //TODO: real transactions
+    @Bean
+    public Transactions transactions() {
+        return new Transactions() {
+            @Override
+            public void execute(Runnable transaction) {
+                transaction.run();
+            }
+
+            @Override
+            public <T> T executeAndReturn(Supplier<T> transaction) {
+                return transaction.get();
+            }
+        };
+    }
+
+    @Bean
+    AppEvents appEvents() {
+        return new InMemoryEvents();
+    }
+
+    @Bean
+    AppEventsPublisher appEventsPublisher(AppEvents events) {
+        return events.publisher();
     }
 }

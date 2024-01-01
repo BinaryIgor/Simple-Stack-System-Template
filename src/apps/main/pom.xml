@@ -38,6 +38,11 @@
 
         <dependency>
             <groupId>com.binaryigor</groupId>
+            <artifactId>types</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.binaryigor</groupId>
             <artifactId>tools</artifactId>
             <version>${project.version}</version>
         </dependency>

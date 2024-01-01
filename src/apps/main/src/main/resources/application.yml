@@ -42,8 +42,8 @@ email:
     email: "app@binaryigor.com"
   user:
     # TODO: prettier url
-    user-activation-url: "/user-auth/sign-in"
-    sign-up-url: "/user-auth/sign-up"
+    user-activation-url: "activate-account"
+    sign-up-url: "sign-up"
     email-change-confirmation-url: "user"
-    password-reset-url: "/user-auth/forgot-password"
-    new-password-url: "/user-auth/set-new-password"
+    password-reset-url: "forgot-password"
+    new-password-url: "set-new-password"

@@ -79,7 +79,7 @@ public class UserEmailSender {
 
         var emailTemplate = new NewEmailTemplate(config.fromEmail(),
                 EmailAddress.ofNameEmail(user.name(), user.email()),
-                user.language().name(),
+                user.language().name().toLowerCase(),
                 type,
                 variables,
                 type,
