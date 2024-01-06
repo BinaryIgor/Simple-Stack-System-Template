@@ -1,9 +1,9 @@
-package com.binaryigor.main.fooddefinitions.app;
+package com.binaryigor.main.definitions.app;
 
 import com.binaryigor.main._common.app.HTMX;
-import com.binaryigor.main.fooddefinitions.core.FoodDefinition;
-import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsHandler;
-import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsRequest;
+import com.binaryigor.main.definitions.core.FoodDefinition;
+import com.binaryigor.main.definitions.core.GetFoodDefinitionsHandler;
+import com.binaryigor.main.definitions.core.GetFoodDefinitionsRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,24 +13,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/food-definitions")
-public class FoodDefinitionsController {
+@RequestMapping("/definitions")
+public class DefinitionsController {
 
     private final GetFoodDefinitionsHandler getFoodDefinitionsHandler;
 
-    public FoodDefinitionsController(GetFoodDefinitionsHandler getFoodDefinitionsHandler) {
+    public DefinitionsController(GetFoodDefinitionsHandler getFoodDefinitionsHandler) {
         this.getFoodDefinitionsHandler = getFoodDefinitionsHandler;
     }
 
-    @GetMapping("/{name}")
-    String getDefinition(@PathVariable String name,
-                         Model model) {
-        model.addAttribute("name", name);
-        return HTMX.fragmentOrFullPage(model, "food-definition");
+    @GetMapping
+    String getDefinitionsPage(Model model) {
+        return HTMX.fragmentOrFullPage(model, "definitions/definitions");
     }
 
-    @GetMapping
-    String getDefinitions(Model model) {
+    @GetMapping("/food/{name}")
+    String getFoodDefinition(@PathVariable String name,
+                         Model model) {
+        model.addAttribute("name", name);
+        return HTMX.fragmentOrFullPage(model, "definitions/single-food");
+    }
+
+    @GetMapping("/food")
+    String getFoodDefinitions(Model model) {
         //TODO: get current user!
         var definitions = getFoodDefinitionsHandler.handle(new GetFoodDefinitionsRequest(UUID.randomUUID()))
                 .stream()
@@ -39,6 +44,6 @@ public class FoodDefinitionsController {
 
         model.addAttribute("definitions", definitions);
 
-        return HTMX.fragmentOrFullPage(model, "food-definitions");
+        return HTMX.fragmentOrFullPage(model, "/definitions/food");
     }
 }

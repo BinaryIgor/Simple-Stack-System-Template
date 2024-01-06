@@ -1,22 +1,22 @@
 <!DOCTYPE HTML>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title th:text="#{application.title}"></title>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" th:href="${stylesPath}"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="${stylesPath}" />
     <script defer src="/index.js"></script>
+    <script type="module" src="/components.js"></script>
     <!--TODO: dynamic js, better HTMX source-->
     <script src="https://unpkg.com/htmx.org@1.9.3"></script>
-    <script type="module" src="/base.js"></script>
-    <script type="module" src="/components.js"></script>
 </head>
+
 <body>
-<info-modal id="error-modal" title="Something went wrong..."
-    title:add:class="text-red-500"></info-modal>
-<div hx-history="false" id="app" hx-history-elt class="p-4">
-   <div th:replace="~{${template}}"></div>
-</div>
+    <info-modal id="error-modal" title="Something went wrong..." title:add:class="text-red-500"></info-modal>
+    <div hx-history="false" id="app" hx-history-elt class="p-4">
+        <div th:replace="~{${template}}"></div>
+    </div>
 </body>
+
 </html>

@@ -15,6 +15,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 //TODO: simplify & test
+//TODO: global sign out for a user:
+// userId: validTokenAfter -> check with issued at
 
 public class JwtAuthTokens implements AuthTokenCreator, AuthTokenAuthenticator {
 

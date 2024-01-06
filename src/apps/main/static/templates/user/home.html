@@ -1,7 +1,12 @@
-<h1>Hello user!</h1>
-<div th:text="${user.name()}"></div>
-<div th:text="${user.email()}"></div>
-<div class="absolute top-0 right-0 p-2 text-xl font-bold cursor-pointer"
-     hx-post="/sign-out"
-     hx-target="#app"
+<div>
+     <h1>Hello user!</h1>
+     <div th:text="|${user.name()}: ${user.email()}|"></div>
+</div>
+<div class="absolute top-0 right-0 p-2 text-xl font-bold cursor-pointer" hx-post="/sign-out" hx-target="#app"
      th:text="#{signOut}"></div>
+<div class="my-4m max-w-[500px]">
+     <h2 class="font-bold text-xl my-8" th:text="#{home.message}"></h2>
+     <div class="button-like my-4" th:text="#{home.currentDay}" hx-get="/day" hx-push-url="/day" hx-target="#app"></div>
+     <div class="button-like my-4" th:text="#{home.history}" hx-get="/history" hx-push-url="/history" hx-target="#app"></div>
+     <div class="button-like" th:text="#{home.definitions}" hx-get="/definitions" hx-push-url="/definitions" hx-target="#app"></div>
+</div>

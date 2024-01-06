@@ -1,7 +1,7 @@
-package com.binaryigor.main.fooddefinitions.infra;
+package com.binaryigor.main.definitions.infra;
 
-import com.binaryigor.main.fooddefinitions.core.FoodDefinition;
-import com.binaryigor.main.fooddefinitions.core.FoodDefinitionRepository;
+import com.binaryigor.main.definitions.core.FoodDefinition;
+import com.binaryigor.main.definitions.core.FoodDefinitionRepository;
 
 import java.util.List;
 import java.util.UUID;

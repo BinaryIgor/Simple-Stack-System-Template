@@ -68,9 +68,6 @@ public class SecurityFilter implements Filter {
             sendExceptionResponse(request, response, 401, e);
         } catch (AccessForbiddenException e) {
             sendExceptionResponse(request, response, 403, e);
-        } catch (Exception e) {
-            log.error("Unknown exception in the SecurityFilter: {} method, {} request", request.getMethod(), request.getRequestURI(), e);
-            sendExceptionResponse(request, response, 400, e);
         }
     }
 
@@ -86,7 +83,7 @@ public class SecurityFilter implements Filter {
         response.addCookie(cookies.token(authToken.value(), authToken.expiresAt()));
     }
 
-    //TODO: sth better with exception
+    //TODO: sth better with exception?
     private void sendExceptionResponse(HttpServletRequest request,
                                        HttpServletResponse response,
                                        int status,

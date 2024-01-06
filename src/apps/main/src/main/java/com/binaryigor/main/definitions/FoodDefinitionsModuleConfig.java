@@ -1,8 +1,8 @@
-package com.binaryigor.main.fooddefinitions;
+package com.binaryigor.main.definitions;
 
-import com.binaryigor.main.fooddefinitions.core.FoodDefinitionRepository;
-import com.binaryigor.main.fooddefinitions.core.GetFoodDefinitionsHandler;
-import com.binaryigor.main.fooddefinitions.infra.InMemoryFoodDefinitionRepository;
+import com.binaryigor.main.definitions.core.FoodDefinitionRepository;
+import com.binaryigor.main.definitions.core.GetFoodDefinitionsHandler;
+import com.binaryigor.main.definitions.infra.InMemoryFoodDefinitionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -92,8 +92,8 @@ public class SimpleStackSystemTemplateConfig {
     }
 
     //TODO: sth better, but maybe it's good enough!
-    @Bean
-    ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
-        return new ShallowEtagHeaderFilter();
-    }
+//    @Bean
+//    ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
+//        return new ShallowEtagHeaderFilter();
+//    }
 }

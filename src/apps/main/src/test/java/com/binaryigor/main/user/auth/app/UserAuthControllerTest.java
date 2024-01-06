@@ -9,7 +9,7 @@ public class UserAuthControllerTest extends IntegrationTest {
 
     @Test
     void shouldReturnSignInPage() {
-        var response = restTemplate.getForEntity("/user-auth/sign-in", String.class);
+        var response = restTemplate.getForEntity("/sign-in", String.class);
 
         Assertions.assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
@@ -18,6 +18,6 @@ public class UserAuthControllerTest extends IntegrationTest {
                 .contains("form-container")
                 .contains("name")
                 .contains("email")
-                .contains("/user-auth/sign-in");
+                .contains("/sign-in");
     }
 }

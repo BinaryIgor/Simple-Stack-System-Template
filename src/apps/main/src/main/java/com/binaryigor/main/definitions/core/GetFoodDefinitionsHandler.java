@@ -1,4 +1,4 @@
-package com.binaryigor.main.fooddefinitions.core;
+package com.binaryigor.main.definitions.core;
 
 import java.util.List;
 
