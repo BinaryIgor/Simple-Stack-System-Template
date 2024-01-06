@@ -1,7 +1,6 @@
 package com.binaryigor.main.auth.app;
 
 import com.binaryigor.main._common.app.Cookies;
-import com.binaryigor.main._common.app.HTMX;
 import com.binaryigor.main._common.core.exception.AccessForbiddenException;
 import com.binaryigor.main._common.core.exception.InvalidAuthTokenException;
 import com.binaryigor.main._common.core.exception.UnauthenticatedException;
@@ -20,6 +19,7 @@ import java.time.Duration;
 
 public class SecurityFilter implements Filter {
 
+    private static final String REDIRECT_ON_FAILED_AUTH_PAGE = "/sign-in";
     private static final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
     private final AuthTokenAuthenticator authTokenAuthenticator;
     private final SecurityRules securityRules;
@@ -68,6 +68,9 @@ public class SecurityFilter implements Filter {
             sendExceptionResponse(request, response, 401, e);
         } catch (AccessForbiddenException e) {
             sendExceptionResponse(request, response, 403, e);
+        } catch (Exception e) {
+            log.error("Unknown exception in the SecurityFilter: {} method, {} request", request.getMethod(), request.getRequestURI(), e);
+            sendExceptionResponse(request, response, 400, e);
         }
     }
 
@@ -91,7 +94,7 @@ public class SecurityFilter implements Filter {
         log.warn("Sending redirect from {} status to {}: {} request", status, request.getMethod(), request.getRequestURI());
         try {
             response.setStatus(302);
-            response.setHeader("Location", "/sign-in");
+            response.setHeader("Location", REDIRECT_ON_FAILED_AUTH_PAGE);
         } catch (Exception e) {
             log.error("Problem while writing response body to HttpServletResponse", e);
         }
