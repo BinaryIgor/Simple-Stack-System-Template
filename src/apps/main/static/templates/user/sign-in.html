@@ -1,28 +1,22 @@
-<h1 class="text-2xl font-bold" th:text="#{signInHeader}"></h1>
-<form-container id="sign-in-form"
-        form:hx-post="/sign-in"
-        form:hx-target="#app"
-        submit:add:class="button-like mt-4"
+<h1 class="text-2xl font-bold" th:text="#{signIn.header}"></h1>
+<form-container id="sign-in-form" form:hx-post="/sign-in" form:hx-target="#app" submit:add:class="button-like mt-4"
         submit:value="Sign in">
-    <input-with-error input:name="email">
-    </input-with-error>
-    <input-with-error
-            input:type="password"
-            input:name="password">
-    </input-with-error>
+        <input-with-error input:name="email">
+        </input-with-error>
+        <input-with-error input:type="password" input:name="password">
+        </input-with-error>
 </form-container>
 
-<button class="button-like my-4"
-        hx-target="#app" hx-get="/reset-password" hx-push-url="/reset-password" th:text="#{forgotPassword}"></button>
+<button class="button-like my-4" hx-target="#app" hx-get="/reset-password" hx-push-url="/reset-password"
+        th:text="#{forgotPassword}"></button>
 
-<div class="mt-8 mb-2 font-bold" th:text="#{signInOrSignUp}"></div>
+<div class="mt-8 mb-2 font-bold" th:text="#{signIn.orSignUp}"></div>
 
-<button class="button-like"
-        hx-target="#app" hx-get="/sign-up" hx-push-url="/sign-up" th:text="#{signUp}"></button>
+<button class="button-like" hx-target="#app" hx-get="/sign-up" hx-push-url="/sign-up" th:text="#{signUp}"></button>
 
 <script>
-    document.getElementById("sign-in-form").addEventListener("htmx:afterRequest", function(e) {
-        const error = e.detail.xhr.response;
-        this.afterSubmit({ error: error });
-    });
+        document.getElementById("sign-in-form").addEventListener("htmx:afterRequest", function (e) {
+                const error = e.detail.xhr.response;
+                this.afterSubmit({ error: error });
+        });
 </script>

@@ -18,7 +18,8 @@ public class SecurityEndpoints {
             "/activate-account",
             "/reset-password",
             "/after-reset-password",
-            "/set-new-password");
+            "/set-new-password",
+            "/after-set-new-password");
     private static final List<String> ASSETS_ENDPOINTS = List.of(".css", ".js");
 
     public static boolean isPublic(SecurityEndpoint endpoint) {

@@ -49,6 +49,7 @@ public class SignUpHandler {
             return activationTokens.saveNewUser(toCreateUser.id()).token();
         });
 
+        //TODO: scheduled email sender
         emailSender.sendAccountActivation(EmailUser.fromUser(toCreateUser), activationToken);
     }
 

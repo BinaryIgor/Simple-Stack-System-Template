@@ -41,9 +41,8 @@ email:
     name: "Simple Stack System Template App"
     email: "app@binaryigor.com"
   user:
-    # TODO: prettier url
     user-activation-url: "activate-account"
     sign-up-url: "sign-up"
     email-change-confirmation-url: "user"
-    password-reset-url: "forgot-password"
+    password-reset-url: "reset-password"
     new-password-url: "set-new-password"

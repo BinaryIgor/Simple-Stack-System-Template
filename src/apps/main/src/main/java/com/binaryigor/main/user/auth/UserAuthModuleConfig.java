@@ -2,9 +2,7 @@ package com.binaryigor.main.user.auth;
 
 import com.binaryigor.main._contract.AuthClient;
 import com.binaryigor.main.user.auth.core.SecondFactorAuthenticator;
-import com.binaryigor.main.user.auth.core.handler.ActivateUserHandler;
-import com.binaryigor.main.user.auth.core.handler.SignInFirstStepHandler;
-import com.binaryigor.main.user.auth.core.handler.SignUpHandler;
+import com.binaryigor.main.user.auth.core.handler.*;
 import com.binaryigor.main.user.auth.infra.InMemorySecondFactorAuthenticationRepository;
 import com.binaryigor.main.user.common.core.ActivationTokenConsumer;
 import com.binaryigor.main.user.common.core.ActivationTokens;
@@ -50,5 +48,19 @@ public class UserAuthModuleConfig {
                                                   SecondFactorAuthenticator secondFactorAuthenticator) {
         return new SignInFirstStepHandler(authClient, userRepository, passwordHasher,
                 secondFactorAuthenticator);
+    }
+
+    @Bean
+    ResetUserPasswordHandler resetUserPasswordHandler(UserRepository userRepository,
+                                                      ActivationTokens activationTokens,
+                                                      UserEmailSender userEmailSender) {
+        return new ResetUserPasswordHandler(userRepository, activationTokens, userEmailSender);
+    }
+
+    @Bean
+    SetNewUserPasswordHandler setNewUserPasswordHandler(ActivationTokenConsumer activationTokenConsumer,
+                                                        UserUpdateRepository userUpdateRepository,
+                                                        PasswordHasher passwordHasher) {
+        return new SetNewUserPasswordHandler(activationTokenConsumer, userUpdateRepository, passwordHasher);
     }
 }
