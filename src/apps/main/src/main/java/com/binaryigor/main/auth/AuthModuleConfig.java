@@ -63,7 +63,7 @@ public class AuthModuleConfig {
     }
 
     @Bean
-    AuthClient authClient(AuthTokenCreator authTokenCreator) {
+    TheAuthClient authClient(AuthTokenCreator authTokenCreator) {
         return new TheAuthClient(authTokenCreator);
     }
 }

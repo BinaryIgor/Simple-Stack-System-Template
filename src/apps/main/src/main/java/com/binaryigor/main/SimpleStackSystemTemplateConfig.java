@@ -10,16 +10,17 @@ import com.binaryigor.types.Transactions;
 import com.binaryigor.types.event.AppEvents;
 import com.binaryigor.types.event.AppEventsPublisher;
 import com.binaryigor.types.event.InMemoryEvents;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -37,10 +38,9 @@ public class SimpleStackSystemTemplateConfig {
 
     //TODO: more sophisticated config
     @Bean
-    MessageSource messageSource() {
+    MessageSource messageSource(@Value("${messages.path-prefixes}") String pathPrefixes) {
         var source = new ReloadableResourceBundleMessageSource();
-        source.setBasenames("file:static/messages/messages",
-                "file:static/messages/error-messages");
+        source.setBasenames(pathPrefixes.split(","));
         source.setCacheSeconds(1);
         source.setUseCodeAsDefaultMessage(true);
         return source;

@@ -1,3 +1,5 @@
+static.path: "${STATIC_PATH:static}"
+
 spring:
   application:
     name: simple-stack-system-template
@@ -12,6 +14,16 @@ spring:
       max-request-size: 2MB
       #      file-size-threshold: 100KB
       enabled: true
+  thymeleaf:
+    cache: true
+    mode: HTML
+    encoding: "UTF-8"
+    prefix: "file:${STATIC_PATH}/templates/"
+  web:
+    resources: # Static resources
+      static-locations: [ "file:${static.path}/assets" ]
+
+messages.pathPrefixes: "file:${static.path}/messages/message,file:${static.path}/messages/error"
 
 server:
   port: "${SERVER_PORT:8080}"

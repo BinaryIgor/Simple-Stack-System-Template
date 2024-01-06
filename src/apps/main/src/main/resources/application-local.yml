@@ -10,6 +10,8 @@ spring:
       cache:
         period: 0
 
+messages.path-prefixes: "file:static/messages/messages,file:static/messages/error-messages"
+
 jwt:
   token-key: "qxg+hQ=="
 

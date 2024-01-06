@@ -25,7 +25,14 @@ else
   mvn clean install -PallTests
 fi
 
-cp -r $EMAIL_TEMPLATES_PATH target/templates
+cp -r $EMAIL_TEMPLATES_PATH deploy/email-templates
+
+mkdir -p deploy/static
+cp -r static/assets deploy/static/assets
+cp -r static/messages deploy/static/messages
+cp -r static/templates deploy/static/templates
+
+bash build_css.bash
 
 if [ $CI_ENV == "local" ]; then
   HTTP_PORT=8080
@@ -33,5 +40,5 @@ else
   HTTP_PORT=$(shuf -i 10000-20000 -n 1)
 fi
 
-echo "http://0.0.0.0:$HTTP_PORT" > "$CI_PACKAGE_TARGET/$APP_URL_FILE"
-echo "$HTTP_PORT" > "$CI_PACKAGE_TARGET/$APP_SERVER_PORT_FILE"
+echo "http://0.0.0.0:$HTTP_PORT" > "$APP_URL_FILE"
+echo "$HTTP_PORT" > "$APP_PORT_FILE"
