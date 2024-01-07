@@ -1,5 +1,6 @@
 #!/bin/bash
-set -e
+# a- export all variables to the environment
+set -ea
 
 export CI_ENV=${ENV:-local}
 
@@ -8,7 +9,7 @@ if [ -z $APP_DIR ]; then
     exit 1
 fi
 
-source ci_config.env
+. "ci_config_${CI_ENV}.env"
 
 scripts_dir=${PWD}
 cd ..
@@ -19,7 +20,7 @@ if [ ! -e $ci_config_file ]; then
     echo "Required $ci_config_file file doesn't exist!"
     exit 1
 fi
-source $ci_config_file
+. $ci_config_file
 
 tag="${TAG:-latest}"
 tagged_image="${APP}:${tag}"
