@@ -5,12 +5,10 @@
     <title th:text="#{application.title}"></title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!--TODO: make a template out of it-->
     <link rel="stylesheet" href="${stylesPath}" />
-    <script defer src="/index.js"></script>
-    <script type="module" src="/components.js"></script>
-    <!--TODO: better HTMX source -->
-    <script src="https://unpkg.com/htmx.org@1.9.3"></script>
+    <script defer src="${indexJsPath}"></script>
+    <script type="module" src="${componentsPath}"></script>
+    <script src="/lib/htmx.min.1.9.10.js"></script>
 </head>
 
 <body>

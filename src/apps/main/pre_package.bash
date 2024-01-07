@@ -27,12 +27,17 @@ fi
 
 cp -r $EMAIL_TEMPLATES_PATH deploy/email-templates
 
+echo "Copying static files..."
 mkdir -p deploy/static
-cp -r static/assets deploy/static/assets
 cp -r static/messages deploy/static/messages
 cp -r static/templates deploy/static/templates
 
-bash build_css.bash
+echo
+echo "Building css, index.html and other dynamic assets..."
+cd static
+bash build_bundle.bash
+cd ..
+echo
 
 if [ $CI_ENV == "local" ]; then
   HTTP_PORT=8080

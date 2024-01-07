@@ -1,12 +1,12 @@
 #!/bin/bash
-# a- export all variables to the environment
+# a: exports all variables to the environment from .env files
 set -ea
 
 export CI_ENV=${ENV:-local}
 
 if [ -z $APP_DIR ]; then
-    echo "APP_DIR is required!"
-    exit 1
+  echo "APP_DIR is required!"
+  exit 1
 fi
 
 . "ci_config_${CI_ENV}.env"
@@ -17,8 +17,8 @@ cd ${APP_DIR}
 
 ci_config_file="ci_config_${CI_ENV}.env"
 if [ ! -e $ci_config_file ]; then
-    echo "Required $ci_config_file file doesn't exist!"
-    exit 1
+  echo "Required $ci_config_file file doesn't exist!"
+  exit 1
 fi
 . $ci_config_file
 
@@ -61,19 +61,25 @@ if [ -n "${EXTRA_RUN_ARGS3}" ]; then
   extra_run_args="$extra_run_args $EXTRA_RUN_ARGS3"
 fi
 
-export run_cmd="docker run -d $extra_run_args --restart unless-stopped --name $app $tagged_image"
+if [ $CI_ENV == "local" ]; then
+  restart_arg="--restart no"
+else
+  restart_arg="--restart unless-stopped"
+fi
+
+export run_cmd="docker run -d $extra_run_args $restart_arg --name $app $tagged_image"
 
 export post_run_cmd="${POST_RUN_CMD:-}"
 
 envsubst '${app} ${tag}' < "$scripts_dir/template_load_and_run_app.bash" > deploy/load_and_run_app.bash
 
 if [ -n "${ZERO_DOWNTIME_DEPLOY}" ]; then
-    export app_url=$(cat ${APP_URL_FILE})
-    export nginx_dir=${ZERO_DOWNTIME_NGINX_DIR}
-    envsubst '${app} ${pre_run_cmd} ${run_cmd} ${post_run_cmd} ${app_url} ${nginx_dir}' \
+  export app_url=$(cat ${APP_URL_FILE})
+  export nginx_dir=${ZERO_DOWNTIME_NGINX_DIR}
+  envsubst '${app} ${pre_run_cmd} ${run_cmd} ${post_run_cmd} ${app_url} ${nginx_dir}' \
     < "$scripts_dir/template_run_zero_downtime_app.bash" > deploy/run_app.bash
 else
-    envsubst '${app} ${pre_run_cmd} ${run_cmd} ${post_run_cmd}' < "$scripts_dir/template_run_app.bash" > deploy/run_app.bash
+  envsubst '${app} ${pre_run_cmd} ${run_cmd} ${post_run_cmd}' < "$scripts_dir/template_run_app.bash" > deploy/run_app.bash
 fi
 
 echo "Package prepared."
