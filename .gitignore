@@ -8,6 +8,9 @@ target/
 .project
 .settings
 
+# We generate it on the fly from template_index.html
+**/templates/index.html
+
 # Scripts
 .env
 deploy/

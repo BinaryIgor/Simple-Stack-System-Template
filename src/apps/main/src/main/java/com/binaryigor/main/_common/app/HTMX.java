@@ -33,8 +33,6 @@ public class HTMX {
                                             String templateName) {
         var currentRequest = currentRequest();
         if (currentRequest.isEmpty() || !isHTMXRequest(currentRequest.get())) {
-            //TODO: get from config!
-            model.addAttribute("stylesPath", "/live-styles.css");
             model.addAttribute("template", templateName);
             return FULL_PAGE;
         }

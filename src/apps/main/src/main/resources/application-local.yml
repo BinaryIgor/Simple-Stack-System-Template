@@ -6,7 +6,7 @@ spring:
     prefix: file:static/templates/
   web:
     resources: # Static resources
-      static-locations: [ "file:static/assets", "file:static/target/assets" ]
+      static-locations: [ "file:static/assets" ]
       cache:
         period: 0
 

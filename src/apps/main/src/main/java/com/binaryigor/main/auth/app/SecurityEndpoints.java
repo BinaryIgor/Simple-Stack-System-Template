@@ -11,6 +11,8 @@ public class SecurityEndpoints {
     public static final String WEBHOOKS = "/webhooks";
     // This is fine since actuator is running on not-exposed to public port
     public static final List<String> PUBLIC_ENDPOINTS = List.of(WEBHOOKS, "/actuator",
+            // TODO: change non-page endpoints to user-auth actually for rate limiting also (mostly?)
+            "/user-auth",
             "/sign-in",
             "/sign-up",
             "/after-sign-up",
