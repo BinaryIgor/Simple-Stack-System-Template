@@ -16,6 +16,9 @@ deploy/
 **/__pycache__/
 **/venv/
 
+# JS for static things
+node_modules/
+
 # Terraform
 
 # Local .terraform directories
