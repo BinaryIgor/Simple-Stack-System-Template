@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DATASOURCE_APPLICATION_DATABASE_URL": "${db-local-host}:${db-local-port}",
+        "DATASOURCE_APPLICATION_DATABASE": "${db-name}",
+        "DATASOURCE_APPLICATION_DATABASE_USER": "${db-user}_reader",
+        "DATASOURCE_APPLICATION_DATABASE_PASSWORD": "secrets:db-reader-password"
+    },
+    "network": "host"
+}

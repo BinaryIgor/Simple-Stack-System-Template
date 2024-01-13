@@ -1,0 +1,43 @@
+{{ define "email_template.html" }}
+
+<h2>You have the following alerts:</h2>
+{{ range .Alerts }}<p>
+{{ if eq .Status "firing" }}
+  <b>Firing - {{.Labels.alertname}}</b>
+{{ else }}
+  <b>Resolved - {{.Labels.alertname}}</b>
+{{ end }}
+<br/>
+<b>Labels</b>
+<ul>{{ range .Labels.SortedPairs }} 
+<li>{{ .Name }} = {{ .Value }}</li>
+{{ end }}</ul>
+<b>Annotations</b>
+<ul>{{ range .Annotations.SortedPairs }}
+<li>{{ .Name }} = {{ .Value }}</li>
+{{ end }}</ul> 
+{{ .GeneratorURL }}</p> 
+{{ end }} 
+
+{{ end }}
+
+{{ define "email_template.txt" }} 
+
+You have the following alerts: {{ range .Alerts }}
+{{ if eq .Status "firing" }}
+* Firing - {{.Labels.alertname}}
+{{ else }}
+* Resolved - {{.Labels.alertname}}
+{{ end }} 
+  * Labels
+  {{ range .Labels.SortedPairs }} 
+  {{ .Name }} = {{ .Value }} 
+  {{ end }} 
+  * Annotations
+  {{ range .Annotations.SortedPairs }} 
+  {{ .Name }} = {{ .Value }} 
+  {{ end }} 
+  {{ .GeneratorURL }} 
+  {{ end }} 
+
+{{ end }}

@@ -17,4 +17,4 @@
   * Prometheus
   * logs -> Loki/Custom solution?
   * Do we need some kind of system monitor or can we live without it?
-  * 
+  * Alerts: it is probably good enough to just send them to monitor, and checkout the logs!

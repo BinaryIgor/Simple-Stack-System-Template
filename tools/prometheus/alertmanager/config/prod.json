@@ -1,0 +1,11 @@
+{
+  "build_env": {
+    "WEBHOOK_RECEIVER_URL": "${monitor-url}/alerts"
+  },
+  "env": {},
+  "build_cmd": "bash build.bash",
+  "secrets": {},
+  "network": "host",
+  "memory": "500M",
+  "cpus": "0.5"
+}

@@ -1,0 +1,7 @@
+{
+  "env": {},
+  "secrets": {},
+  "network": "host",
+  "memory": "250M",
+  "cpus": "0.25"
+}

@@ -1,0 +1,89 @@
+apiVersion: 1
+providers:
+  - name: alerts
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/alerts.json
+
+  - name: machine
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/machine.json
+
+  - name: application
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/application.json
+
+  - name: coturn
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/coturn.json
+
+  - name: node
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/node.json
+
+  - name: jvm
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/jvm.json
+
+  - name: prometheus
+    orgId: 1
+    folder: "Monitoring"
+    folderUid: "monitoring"
+    type: file
+    disableDeletion: false
+    editable: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/monitoring/prometheus.json
+
+#  - name: event
+#    orgId: 1
+#    folder: "Application"
+#    folderUid: "application"
+#    type: file
+#    disableDeletion: false
+#    editable: false
+#    allowUiUpdates: false
+#    options:
+#      path: /var/lib/grafana/dashboards/application/event.json

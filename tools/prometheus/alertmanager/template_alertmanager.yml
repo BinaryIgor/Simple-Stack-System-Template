@@ -1,0 +1,60 @@
+global:
+  resolve_timeout: 5m
+  # slack_api_url: ""
+
+route:
+  group_by: ['alertname']
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  group_wait: 30s
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 2m
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 8h
+  receiver: 'alerts-receiver'
+
+# Data structures reference: https://prometheus.io/docs/alerting/latest/notifications/
+# Other good sources: https://harthoover.com/pretty-alertmanager-alerts-in-slack/
+# Emails: https://fabianlee.org/2022/07/03/prometheus-external-template-for-alertmanager-html-email-with-kube-prometheus-stack/
+receivers:
+  - name: 'alerts-receiver'
+    webhook_configs:
+      - url: "${WEBHOOK_RECEIVER_URL}"
+        send_resolved: true  
+    email_configs:
+      - to: "${EMAIL_RECEIVER_TO_EMAILS}"
+        from: "${EMAIL_RECEIVER_FROM_EMAIL}"
+        smarthost: "${EMAIL_RECEIVER_HOST}"
+        auth_username: "${EMAIL_RECEIVER_USERNAME}"
+        auth_password: "${EMAIL_RECEIVER_PASSWORD}"
+        headers:
+          X-PM-Tag: "${EMAIL_REVEIVER_EMAIL_TAG}"
+        html: '{{ template "email_template.html" . }}'
+        text: '{{ template "email_template.txt" . }}'
+        send_resolved: true
+    # slack_configs:
+    #   - channel: '#monitoring'
+    #     send_resolved: true
+    #     color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+    #     icon_url: "https://avatars3.githubusercontent.com/u/3380462"
+    #     # title_link: "https://link"
+    #     # If the same alerts are groupped together (like ApplicationDown) there is no CommonAnnotations.summary here
+    #     title: '[{{ .Status | toUpper }}] alert: {{ if .CommonAnnotations.summary }}{{ .CommonAnnotations.summary }}{{ else }}{{ .GroupLabels.SortedPairs.Values | join " " }}{{ end }}'
+    #     text: |-
+    #       {{ range .Alerts }}
+    #       *Alert:* {{ .Annotations.summary }}
+    #       *Description:* {{ .Annotations.description }}
+    #       *Details:*
+    #         {{ range .Labels.SortedPairs }}• *{{ .Name }}:* `{{ .Value }}`
+    #         {{ end }}
+    #       {{ end }}
+
+templates:
+- '/etc/alertmanager/templates/email_templates.tmpl'

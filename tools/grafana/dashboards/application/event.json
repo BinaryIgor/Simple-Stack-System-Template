@@ -1,0 +1,378 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "P0B0FEE769E9E392E"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto",
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "9.2.4",
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "P0B0FEE769E9E392E"
+            },
+            "format": "table",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  id, name, description, start_at, end_at\nFROM\n  event.event\nORDER BY start_at DESC\nLIMIT 1000;\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "timeColumn": "time",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "Events",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "P0B0FEE769E9E392E"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto",
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 24,
+          "x": 0,
+          "y": 9
+        },
+        "id": 3,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "9.2.4",
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "P0B0FEE769E9E392E"
+            },
+            "format": "table",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT invited, accepted, entered, in_meeting, waiting_for_meeting,\n  (SELECT COUNT(*) FROM event.meeting WHERE event_id = '$event_id') AS meetings\nFROM (\n  SELECT\n  COUNT(*) as invited,\n  SUM(CASE WHEN response = 'ACCEPTED' THEN 1 ELSE 0 END) AS accepted\n  FROM event.invitation WHERE event_id = '$event_id'\n) AS invitation, \n(\n SELECT \n SUM(CASE WHEN entered_at IS NULL THEN 0 ELSE 1 END) AS entered,\n SUM(CASE WHEN (available_at > (NOW() - interval '20 minute') AND available = false) THEN 1 ELSE 0 END) AS in_meeting,\n SUM(CASE WHEN (available_at > (NOW() - interval '1 minute') AND available = true) THEN 1 ELSE 0 END) AS waiting_for_meeting\n FROM event.participant WHERE event_id = '$event_id'\n) AS event_participant;\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "timeColumn": "time",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "Event stats",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "P0B0FEE769E9E392E"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto",
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "id"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 191
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "created_at"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 236
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 24,
+          "x": 0,
+          "y": 15
+        },
+        "id": 2,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true,
+          "sortBy": []
+        },
+        "pluginVersion": "9.2.4",
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "P0B0FEE769E9E392E"
+            },
+            "format": "table",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  em.id, em.created_at, mp.user_id, u.name, u.email, mp.entered_at, mp.left_at\nFROM\n  event.meeting AS em\nINNER JOIN event.meeting_participant AS mp\nON em.id = mp.meeting_id\nINNER JOIN \"user\".\"user\" AS u\nON mp.user_id = u.id\nWHERE event_id = '$event_id' AND (meeting_id IN (${meeting_id:singlequote}))\nORDER BY created_at DESC\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "timeColumn": "time",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "Event meetings",
+        "type": "table"
+      }
+    ],
+    "refresh": "1m",
+    "schemaVersion": 37,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "9c0f7b56-cc76-4f50-9686-32954db1390d",
+            "value": "9c0f7b56-cc76-4f50-9686-32954db1390d"
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "P0B0FEE769E9E392E"
+          },
+          "definition": "SELECT id FROM event.event ORDER BY start_at DESC LIMIT 1000",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Event id",
+          "multi": false,
+          "name": "event_id",
+          "options": [],
+          "query": "SELECT id FROM event.event ORDER BY start_at DESC LIMIT 1000",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "P0B0FEE769E9E392E"
+          },
+          "definition": "SELECT id FROM event.meeting WHERE event_id = '$event_id'",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Meeting id",
+          "multi": false,
+          "name": "meeting_id",
+          "options": [],
+          "query": "SELECT id FROM event.meeting WHERE event_id = '$event_id'",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Event",
+    "uid": "event",
+    "version": 1,
+    "weekStart": ""
+  }

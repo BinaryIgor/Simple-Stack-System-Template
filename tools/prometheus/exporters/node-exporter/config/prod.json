@@ -1,0 +1,16 @@
+{
+  "volumes": [
+    "/:/host:ro,rslave"
+  ],
+  "env": {},
+  "secrets": {},
+  "network": "host",
+  "memory": "250M",
+  "cpus": "0.25",
+  "docker_extra_args": [
+    "--pid=host"
+  ],
+  "container_extra_args": [
+    "--path.rootfs=/host"
+  ]
+}
