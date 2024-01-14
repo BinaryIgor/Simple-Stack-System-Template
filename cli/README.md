@@ -48,3 +48,7 @@ For swagger go to: `http://localhost:8080/swagger-ui.html`
 
 ## Logs
 TODO
+
+## TODO
+* secrets container: encrypted secrets on the disk, one container decrypts them, others use their volume
+* logs solution

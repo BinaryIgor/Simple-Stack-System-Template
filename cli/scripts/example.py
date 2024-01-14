@@ -1,16 +1,27 @@
-from argparse import ArgumentParser, SUPPRESS, RawTextHelpFormatter
+from commons import meta
 
-def args_parser():
-    parser = ArgumentParser()
-    parser.add_argument("--test", "-t", help="test argument", required=True)
-    parser.add_argument("--optional", required=False)
-    parser.add_argument("--execute",
-                               help="This is potentially dangerous operation, so we require to pass additional flag",
-                               required=True, action="store_true")
+log = meta.new_log("example")
+args = meta.cmd_args({
+    "test": {
+        "help": "Test argument",
+        "required": True
+    },
+    "some_optional_arg": {
+        "help": "Optional flag",
+        "action": "store_false"}
+}, env_arg=False, script_description="""
+   Multiline script description.
     
-    return parser
+    It even has some HTML:
+    <div>
+      <p>Testing html aesthetics</p>
+    </div>
+""")
 
-
-args = vars(args_parser().parse_args())
-
-print(f"Test arg: {args}")
+log.info(f"Test args: {args}")
+log.info(f"Root 1: {meta.cli_root_dir()}")
+log.info(f"Root 2: {meta.root_dir()}")
+log.info(f"Root 3: {meta.root_src_dir()}")
+log.info(f"File 4: {meta.env_config()}")
+log.info("")
+log.info(f"Apps: {meta.sorted_apps()}")

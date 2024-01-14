@@ -1,0 +1,19 @@
+{
+  "app-url-file": "app_url.txt",
+  "current-main-app-url-file-path": "$PWD/../main/app_url.txt",
+  "frontend-domain": "simple-stack-system-template.com,",
+  "static-path": "/home/simple-stack-system-template/static",
+  "logs-path": "/home/simple-stack-system-template/system-logs",
+  "monitor-port": "9999",
+  "monitor-url": "http://localhost:9999",
+  "db-url": "jdbc:postgresql://localhost:5432/simple-stack-system-template",
+  "db-local-url": "jdbc:postgresql://localhost:5432/simple-stack-system-template",
+  "db-local-host": "localhost",
+  "db-host": "localhost",
+  "db-port": "5432",
+  "db-local-port": "5432",
+  "db-root-user": "postgres",
+  "db-root-name": "postgres",
+  "db-user": "simple-stack-system-template",
+  "db-name": "simple-stack-system-template"
+}

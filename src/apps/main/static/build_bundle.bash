@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bundle_root=../deploy/static
+bundle_root=../target/static
 bundle_dir=$bundle_root/assets
 bundle_hash=$(date +%s)
 css_bundle="styles_$bundle_hash.css"

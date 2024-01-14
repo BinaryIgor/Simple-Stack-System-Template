@@ -1,0 +1,32 @@
+{
+  "user": "simple-stack-system-template",
+  "secrets-path": "/home/simple-stack-system-template/.secrets",
+  "deploy-dir": "/home/simple-stack-system-template/deploy",
+  "machines": [
+    {
+      "name": "main",
+      "hosts": [
+        "main"
+      ],
+      "apps": [
+        "metrics-and-logs-collector",
+        "main",
+        "nginx-main"
+      ]
+    },
+    {
+      "name": "guardian",
+      "hosts": [
+        "guardian"
+      ],
+      "apps": [
+        "metrics-and-logs-collector",
+        "prometheus",
+        "prometheus-alertmanager",
+        "guardian",
+        "grafana",
+        "nginx-logs-browser"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "postgres-db",
+    "dir": "tools/postgres-db"
+  },
+  {
+    "name": "main",
+    "dir": "src/apps/main"
+  },
+  {
+    "name": "processor",
+    "dir": "src/apps/processor"
+  },
+  {
+    "name": "prometheus",
+    "dir": "tools/prometheus"
+  },
+  {
+    "name": "prometheus-alertmanager",
+    "dir": "tools/prometheus/alertmanager"
+  },
+  {
+    "name": "guardian",
+    "dir": "src/apps/guardian"
+  },
+  {
+    "name": "nginx-set-https-server",
+    "dir": "tools/nginx/set-https-server"
+  },
+  {
+    "name": "nginx-main",
+    "dir": "tools/nginx/main"
+  },
+  {
+    "name": "nginx-logs-browser",
+    "dir": "tools/nginx/logs-browser"
+  },
+   {
+    "name": "grafana",
+    "dir": "tools/grafana"
+  }
+]
