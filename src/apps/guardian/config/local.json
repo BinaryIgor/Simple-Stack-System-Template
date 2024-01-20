@@ -1,0 +1,14 @@
+{
+  "build_cmd": "bash build_cmd.bash",
+  "volumes": [
+  ],
+  "build_env": {
+  },
+  "env": {
+    "JVM_OPTS": "-Xmx450m",
+    "ENV": "local"
+  },
+  "secrets": {},
+  "network": "host",
+  "memory": "500M"
+}

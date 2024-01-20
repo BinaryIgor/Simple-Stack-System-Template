@@ -1,0 +1,16 @@
+{
+  "env": {
+    "METRICS_TARGET_URL": "http://localhost:${guardian-port}/metrics",
+    "LOGS_TARGET_URL": "http://localhost:${guardian-port}/logs",
+    "MACHINE_NAME": "main",
+    "METRICS_COLLECTION_INTERVAL": "20",
+    "LOGS_COLLECTION_INTERVAL": "5"
+  },
+  "volumes": [
+    "/var/run/docker.sock:/var/run/docker.sock"
+  ],
+  "secrets": {},
+  "network": "host",
+  "memory": "250M",
+  "cpus": "0.25"
+}

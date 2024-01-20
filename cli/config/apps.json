@@ -8,10 +8,6 @@
     "dir": "src/apps/main"
   },
   {
-    "name": "processor",
-    "dir": "src/apps/processor"
-  },
-  {
     "name": "prometheus",
     "dir": "tools/prometheus"
   },
@@ -22,6 +18,10 @@
   {
     "name": "guardian",
     "dir": "src/apps/guardian"
+  },
+  {
+    "name": "metrics-and-logs-collector",
+    "dir": "tools/metrics-and-logs-collector"
   },
   {
     "name": "nginx-set-https-server",

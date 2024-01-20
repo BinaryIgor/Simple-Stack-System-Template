@@ -1,0 +1,14 @@
+{
+  "env": {
+    "METRICS_TARGET_URL": "${monitor-url}/metrics",
+    "MACHINE_NAME": "${CI_MACHINE_NAME}",
+    "COLLECTION_INTERVAL": "10"
+  },
+  "volumes": [
+    "/var/run/docker.sock:/var/run/docker.sock"
+  ],
+  "secrets": {},
+  "network": "host",
+  "memory": "250M",
+  "cpus": "0.25"
+}
