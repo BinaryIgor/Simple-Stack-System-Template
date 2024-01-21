@@ -56,5 +56,5 @@ receivers:
     #         {{ end }}
     #       {{ end }}
 
-templates:
-- '/etc/alertmanager/templates/email_templates.tmpl'
+#templates:
+#- '/etc/alertmanager/templates/email_templates.tmpl'

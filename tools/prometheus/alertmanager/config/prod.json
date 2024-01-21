@@ -1,9 +1,9 @@
 {
   "build_env": {
-    "WEBHOOK_RECEIVER_URL": "${monitor-url}/alerts"
+    "WEBHOOK_RECEIVER_URL": "${guardian-url}/alerts"
   },
   "env": {},
-  "build_cmd": "bash build.bash",
+  "build_cmd": "bash build_cmd.bash",
   "secrets": {},
   "network": "host",
   "memory": "500M",
