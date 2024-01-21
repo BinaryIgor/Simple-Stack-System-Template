@@ -19,10 +19,10 @@ scrape_configs:
   - job_name: prometheus-alertmanager
     static_configs:
       - targets: ['localhost:${ALERTMANAGER_PORT}']
-  - job_name: monitor-node
+  - job_name: guardian-node
     static_configs:
       - targets: ['localhost:${NODE_EXPORTER_PORT}']
-  - job_name: monitor
+  - job_name: guardian
     metrics_path: "/actuator/prometheus"
     static_configs:
-      - targets: ['localhost:${MONITOR_PORT}']
+      - targets: ['localhost:${GUARDIAN_PORT}']

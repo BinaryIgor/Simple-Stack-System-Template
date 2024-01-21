@@ -28,17 +28,17 @@ receivers:
     webhook_configs:
       - url: "${WEBHOOK_RECEIVER_URL}"
         send_resolved: true  
-    email_configs:
-      - to: "${EMAIL_RECEIVER_TO_EMAILS}"
-        from: "${EMAIL_RECEIVER_FROM_EMAIL}"
-        smarthost: "${EMAIL_RECEIVER_HOST}"
-        auth_username: "${EMAIL_RECEIVER_USERNAME}"
-        auth_password: "${EMAIL_RECEIVER_PASSWORD}"
-        headers:
-          X-PM-Tag: "${EMAIL_REVEIVER_EMAIL_TAG}"
-        html: '{{ template "email_template.html" . }}'
-        text: '{{ template "email_template.txt" . }}'
-        send_resolved: true
+#    email_configs:
+#      - to: "${EMAIL_RECEIVER_TO_EMAILS}"
+#        from: "${EMAIL_RECEIVER_FROM_EMAIL}"
+#        smarthost: "${EMAIL_RECEIVER_HOST}"
+#        auth_username: "${EMAIL_RECEIVER_USERNAME}"
+#        auth_password: "${EMAIL_RECEIVER_PASSWORD}"
+#        headers:
+#          X-PM-Tag: "${EMAIL_REVEIVER_EMAIL_TAG}"
+#        html: '{{ template "email_template.html" . }}'
+#        text: '{{ template "email_template.txt" . }}'
+#        send_resolved: true
     # slack_configs:
     #   - channel: '#monitoring'
     #     send_resolved: true

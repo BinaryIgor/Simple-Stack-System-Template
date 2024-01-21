@@ -2,7 +2,7 @@
   "volumes": [
     "prometheus-volume:/prometheus"
   ],
-  "build_cmd": "bash build.bash",
+  "build_cmd": "bash build_cmd.bash",
   "pre_run_cmd": "bash init_volume.bash prometheus-volume",
   "run_args": [
     "--storage.tsdb.retention.time=30d",
@@ -12,7 +12,7 @@
   "build_env": {
     "ALERTMANAGER_PORT": "9093",
     "NODE_EXPORTER_PORT": "9100",
-    "MONITOR_PORT": "${monitor-port}",
+    "GUARDIAN_PORT": "${guardian-port}",
     "INSTANCE_ALERT_TO_IGNORE_APPS_REGEX": ".+(backup|-logs-browser)$",
     "LOGS_ERRORS_ALERT_TO_IGNORE_APPS_REGEX": ".+(-logs-browser)$"
   },
