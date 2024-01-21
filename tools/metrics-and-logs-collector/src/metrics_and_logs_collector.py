@@ -31,9 +31,9 @@ METRICS_COLLECTION_INTERVAL = int(environ.get("METRICS_COLLECTION_INTERVAL", 10)
 LOGS_COLLECTION_INTERVAL = int(environ.get("LOGS_COLLECTION_INTERVAL", 3))
 
 LAST_METRICS_READ_AT_FILE_PATH = environ.get("LAST_METRICS_READ_AT_FILE",
-                                             "/tmp/metrics-and-logs-collector-last-metrics-read-at.txt")
+                                             "/tmp/last-metrics-read-at.txt")
 LAST_LOGS_READ_AT_FILE_PATH = environ.get("LAST_LOGS_READ_AT_FILE",
-                                          "/tmp/metrics-and-logs-collector-last-logs-read-at.txt")
+                                          "/tmp/last-logs-read-at.txt")
 
 MAX_LOGS_NOT_SEND_AGO = 10 * 60
 
@@ -463,7 +463,6 @@ def update_last_data_read_at_file(file, read_at):
         with open(file, "w") as f:
             f.write(str(read_at))
 
-        log.info("File updated")
         print()
     except Exception:
         log_exception("Problem while updating last data read at file...")

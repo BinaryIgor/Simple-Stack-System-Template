@@ -5,6 +5,7 @@
   "frontend-domain": "simple-stack-system-template.com,",
   "static-path": "/home/simple-stack-system-template/static",
   "logs-path": "/home/simple-stack-system-template/system-logs",
+  "last-logs-collection-at-file": "/tmp/metrics-and-logs-collector/last-logs-read-at.txt",
   "guardian-port": "9999",
   "guardian-metrics-port": "10000",
   "guardian-url": "http://localhost:9999",

@@ -23,6 +23,22 @@ stop_container() {
 stop_backup_container() {
   echo "Stopping previous ${app_backup} container..."
   docker stop ${app_backup} --time ${stop_timeout}
+  timestamp=$(date +%s)
+
+  if [ "${should_wait}" == "should_wait" ] && [ -f "${last_logs_collector_read_at_file}" ]; then
+    for i in {1..5}
+    do
+      last_read_at=$(cat "${last_logs_collector_read_at_file}")
+      if [ "$timestamp" \> "$last_read_at" ]; then
+        echo "Waiting (5s) for last logs collection before removing container for $i/5 time"
+        sleep 5
+      else
+        echo
+        echo "Last logs collected!"
+        break
+      fi
+    done
+  fi
 }
 
 echo "Sourcing deploy variables, if they're present..."

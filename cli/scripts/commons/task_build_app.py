@@ -298,7 +298,9 @@ def _run_app_script_placeholders_replacement(comment,
         "stop_timeout": stop_timeout,
         "pre_run_cmd": pre_run_cmd,
         "run_cmd": run_cmd,
-        "post_run_cmd": post_run_cmd
+        "post_run_cmd": post_run_cmd,
+        "should_wait": "X" if _should_not_wait_for_next_logs_collection(app_name) else "should_wait",
+        "last_logs_collector_read_at_file": meta.env_config().get("last-logs-collection-at-file")
     }
 
     if zero_downtime_deploy_config:
@@ -317,3 +319,7 @@ def _run_app_script_placeholders_replacement(comment,
                                                                                                app_url)
 
     return placeholders_replacement
+
+
+def _should_not_wait_for_next_logs_collection(app_name):
+    return "metrics-and-logs-collector" in app_name or "guardian" in app_name
