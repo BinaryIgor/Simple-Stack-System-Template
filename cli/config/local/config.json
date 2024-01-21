@@ -2,7 +2,7 @@
   "app-url-file": "app_url.txt",
   "current-main-app-url-file-path": "$PWD/../main/app_url.txt",
   "upstream-main-nginx-dir": "$PWD/../nginx-main",
-  "frontend-domain": "simple-stack-system-template.com,",
+  "frontend-domain": "simple-stack-system-template.com",
   "static-path": "/home/simple-stack-system-template/static",
   "logs-path": "/home/simple-stack-system-template/system-logs",
   "last-logs-collection-at-file": "/tmp/metrics-and-logs-collector/last-logs-read-at.txt",

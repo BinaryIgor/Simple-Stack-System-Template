@@ -1,0 +1,23 @@
+{
+  "volumes": [
+    "$PWD/conf:/etc/nginx/conf.d",
+    "${certs-path}:/etc/certs",
+    "${static-path}:/usr/share/nginx/site:ro"
+  ],
+  "build_cmd": "bash build.bash",
+  "build_env": {
+    "HTTP_PORT": 80,
+    "HTTPS_PORT": 443,
+    "DOMAIN": "${frontend-domain}",
+    "PRIVATE_IP_RANGE": "${private-ip-range}"
+  },
+  "pre_run_cmd": "bash update_app_url_pre_start.bash \"${current-api-url-file-path}\"",
+  "post_run_cmd": "bash check_proxied_app.bash",
+  "pre_deploy_actions": [
+    "chmod +x ${CI_DEPLOY_DIR}/reload_nginx_config.sh",
+    "sudo cp ${CI_DEPLOY_DIR}/reload_nginx_config.sh /etc/letsencrypt/renewal-hooks/post/reload_nginx_config.sh"
+  ],
+  "network": "host",
+  "memory": "500M",
+  "cpus": "0.5"
+}
