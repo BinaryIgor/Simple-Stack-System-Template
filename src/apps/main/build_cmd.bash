@@ -26,16 +26,7 @@ fi
 
 cp -r $EMAIL_TEMPLATES_PATH target/email-templates
 
-echo "Copying static files..."
-mkdir -p target/static
-cp -r static/messages target/static/messages
-cp -r static/templates target/static/templates
-
-echo
-echo "Building css, index.html and other dynamic assets..."
-cd static
-bash build_bundle.bash
-cd ..
+bash build_static.bash
 echo
 
 if [ $CI_ENV == "local" ]; then
