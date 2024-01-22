@@ -148,6 +148,10 @@ def cli_config_dir():
     return path.join(cli_root_dir(), "config")
 
 
+def cli_secrets_dir():
+    return path.join(cli_config_dir(), current_env(), "secrets")
+
+
 def cli_target_dir():
     return path.join(cli_root_dir(), "target")
 
@@ -220,9 +224,19 @@ def file_content(file_path):
         return f.read()
 
 
+def binary_file_content(file_path):
+    with open(file_path, "rb") as f:
+        return f.read()
+
+
 def write_to_file(file_path, content):
     with open(file_path, "w") as f:
         f.write(content)
+
+
+def write_binary_to_file(file_path, binary):
+    with open(file_path, "wb") as f:
+        f.write(binary)
 
 
 def content_with_replaced_placeholders(content, vars_replacement, objects_replacement=None):

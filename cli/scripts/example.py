@@ -1,4 +1,4 @@
-from commons import meta
+from commons import meta, crypto
 
 log = meta.new_log("example")
 args = meta.cmd_args({
@@ -18,10 +18,5 @@ args = meta.cmd_args({
     </div>
 """)
 
-log.info(f"Test args: {args}")
-log.info(f"Root 1: {meta.cli_root_dir()}")
-log.info(f"Root 2: {meta.root_dir()}")
-log.info(f"Root 3: {meta.root_src_dir()}")
-log.info(f"File 4: {meta.env_config()}")
-log.info("")
-log.info(f"Apps: {meta.sorted_apps()}")
+log.info(crypto.random_key())
+log.info(crypto.random_password())

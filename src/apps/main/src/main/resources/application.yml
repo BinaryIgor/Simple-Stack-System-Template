@@ -15,7 +15,7 @@ spring:
       #      file-size-threshold: 100KB
       enabled: true
   thymeleaf:
-    cache: true
+    cache: false
     mode: HTML
     encoding: "UTF-8"
     prefix: "file:${static.path}/templates/"
