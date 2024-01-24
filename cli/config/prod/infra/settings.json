@@ -1,0 +1,7 @@
+{
+  "region": "fra1",
+  "image": "ubuntu-22-04-x64",
+  "ssh_keys": [
+    "igor"
+  ]
+}

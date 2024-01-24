@@ -1,0 +1,35 @@
+[
+  {
+    "name": "main-droplet",
+    "region": "${region}",
+    "size": "s-1vcpu-1gb",
+    "image": "${image}",
+    "ssh_keys": "ob#ssh_keys",
+    "backups": false,
+    "ipv6": true,
+    "monitoring": true,
+     "tags": [
+      "ssh-access",
+      "outbound-access",
+      "web-server",
+       "postgres"
+    ],
+    "user_data": "${droplet_init.bash}"
+  },
+  {
+    "name": "system-guardian-droplet",
+    "region": "${region}",
+    "size": "s-1vcpu-1gb",
+    "image": "${image}",
+    "ssh_keys": "ob#ssh_keys",
+    "backups": false,
+    "ipv6": true,
+    "monitoring": true,
+    "tags": [
+      "ssh-access",
+      "outbound-access",
+      "internal-web-server"
+    ],
+    "user_data": "${droplet_init.bash}"
+  }
+]

@@ -49,3 +49,13 @@ def _check_token():
         raise Exception("DO_API_TOKEN env variable needs to be supplied with valid digital ocean token")
 
     _AUTH_HEADER = {"Authorization": f"Bearer {_API_TOKEN}"}
+
+
+def create(resource, data):
+    _check_token()
+    return requests.post(f"{BASE_URL}/{resource}", headers=_AUTH_HEADER, json=data)
+
+
+def delete(resource, resource_id):
+    _check_token()
+    return requests.delete(f"{BASE_URL}/{resource}/{resource_id}", headers=_AUTH_HEADER)

@@ -1,0 +1,5 @@
+{
+  "name": "simple-stack-system-template-vpc",
+  "description": "VPC for internal system communication",
+  "region": "${region}"
+}

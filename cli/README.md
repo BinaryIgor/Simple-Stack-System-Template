@@ -51,5 +51,6 @@ TODO
 
 ## TODO
 * secrets container: encrypted secrets on the disk, one container decrypts them, others use their volume
+* secrets: one file/multiple files encrypted with different secrets? Secret groups?
 * logs solution
 * Do not remove previous (backup) container for logs gathering/collection!

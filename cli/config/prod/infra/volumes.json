@@ -1,0 +1,19 @@
+{
+  "__comment__": [
+    "volumes can't have '_' in name, but automatic, digital ocean mount mechanism,",
+    "always mounts them under path, where '-' are changed to '_'.",
+    "So pg-volume will be mounted under /mnt/pg_volume path."
+  ],
+  "attachments": {
+    "main-postgres-db-droplet": "main-postgres-db-volume"
+  },
+  "volumes": [
+    {
+      "name": "main-postgres-db-volume",
+      "description": "volume for main postgres db",
+      "size_gigabytes": 50,
+      "region": "${region}",
+      "filesystem_type": "ext4"
+    }
+  ]
+}

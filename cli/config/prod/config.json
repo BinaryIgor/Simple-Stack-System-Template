@@ -15,5 +15,6 @@
   "db-root-user": "postgres",
   "db-root-name": "postgres",
   "db-user": "simple-stack-system-template",
-  "db-name": "simple-stack-system-template"
+  "db-name": "simple-stack-system-template",
+  "region": ""
 }

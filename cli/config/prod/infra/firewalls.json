@@ -1,0 +1,135 @@
+[
+  {
+    "name": "ssh-fw",
+    "tags": [
+      "ssh-access"
+    ],
+    "inbound_rules": [
+      {
+        "protocol": "tcp",
+        "ports": "22",
+        "sources": {
+          "addresses": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      },
+      {
+        "protocol": "icmp",
+        "ports": "0",
+        "sources": {
+          "addresses": [
+            "${internal_ip_range}"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "outbound-access-fw",
+    "tags": [
+      "outbound-access"
+    ],
+    "outbound_rules": [
+      {
+        "protocol": "tcp",
+        "destinations": {
+          "addresses": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      },
+      {
+        "protocol": "udp",
+        "destinations": {
+          "addresses": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      },
+      {
+        "protocol": "icmp",
+        "destinations": {
+          "addresses": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "web-server-fw",
+    "tags": [
+      "web-server"
+    ],
+    "inbound_rules": [
+      {
+        "protocol": "tcp",
+        "ports": "80",
+        "sources": {
+          "addresses": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      },
+      {
+        "protocol": "tcp",
+        "ports": "443",
+        "sources": {
+          "addresses": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "internal-web-server-fw",
+    "tags": [
+      "internal-web-server"
+    ],
+    "inbound_rules": [
+      {
+        "protocol": "tcp",
+        "ports": "80",
+        "sources": {
+          "addresses": [
+            "${internal_ip_range}"
+          ]
+        }
+      },
+      {
+        "protocol": "tcp",
+        "ports": "443",
+        "sources": {
+          "addresses": [
+            "${internal_ip_range}"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "postgres-fw",
+    "tags": [
+      "postgres"
+    ],
+    "inbound_rules": [
+      {
+        "protocol": "tcp",
+        "ports": "5432",
+        "sources": {
+          "addresses": [
+            "${internal_ip_range}"
+          ]
+        }
+      }
+    ]
+  }
+]

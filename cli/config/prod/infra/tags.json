@@ -1,0 +1,7 @@
+[
+  "ssh-access",
+  "outbound-access",
+  "web-server",
+  "internal-web-server",
+  "postgres"
+]
