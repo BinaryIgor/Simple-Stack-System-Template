@@ -10,6 +10,10 @@ args = meta.cmd_args({
         "help": "secret name",
         "required": True
     },
+    "group": {
+        "help": "secret group",
+        "required": True
+    },
     "type": {
         "help": f"Type of the secret. Either {PASSWORD} or a {KEY}"
     }
@@ -18,8 +22,9 @@ args = meta.cmd_args({
 log = meta.new_log("store_secret")
 
 name = args["name"]
+group = args["group"]
 
-log.info(f"About to store {name} secret...")
+log.info(f"About to store {name} secret in {group}...")
 
 secret_type = args["type"]
 if secret_type:
@@ -29,8 +34,10 @@ else:
     value = input(f"{name} value: ")
 
 password = input(f"{name} password: ")
-encrypted = crypto.encrypted_data(password, value.encode("utf-8"))
 
-secret_file = path.join(meta.cli_secrets_dir(), name)
+secrets_file = crypto.secrets_file()
 
-meta.write_binary_to_file(secret_file, encrypted)
+crypto.save_secret(key=name, value=value, group=group, encryption_password=password)
+
+log.info(f"Secret {name} saved in the {group}")
+
