@@ -20,3 +20,6 @@ args = meta.cmd_args({
 
 log.info(crypto.random_key())
 log.info(crypto.random_password())
+print(crypto.group_secret_names("internal"))
+encryption_password = input("encryption password:")
+print(crypto.decrypted_secret_group("internal", encryption_password))

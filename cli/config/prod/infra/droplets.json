@@ -1,6 +1,6 @@
 [
   {
-    "name": "main-droplet",
+    "name": "main",
     "region": "${region}",
     "size": "s-1vcpu-1gb",
     "image": "${image}",
@@ -17,7 +17,7 @@
     "user_data": "${droplet_init.bash}"
   },
   {
-    "name": "system-guardian-droplet",
+    "name": "system-guardian",
     "region": "${region}",
     "size": "s-1vcpu-1gb",
     "image": "${image}",

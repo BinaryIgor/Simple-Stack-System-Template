@@ -29,11 +29,8 @@ cp -r $EMAIL_TEMPLATES_PATH target/email-templates
 bash build_static.bash
 echo
 
-if [ $CI_ENV == "local" ]; then
-  HTTP_PORT=8080
-else
-  HTTP_PORT=$(shuf -i 10000-20000 -n 1)
-fi
+
+HTTP_PORT=$(shuf -i 10000-20000 -n 1)
 
 echo "http://0.0.0.0:$HTTP_PORT" > "$CI_PACKAGE_TARGET/$APP_URL_FILE"
 echo "$HTTP_PORT" > "$CI_PACKAGE_TARGET/$APP_PORT_FILE"

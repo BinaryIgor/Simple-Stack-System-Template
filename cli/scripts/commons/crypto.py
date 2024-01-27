@@ -78,13 +78,30 @@ def _decrypted_group_from_secrets_file(file, group, encryption_password):
     return json.loads(decrypted_group_data)
 
 
-def decrypted_secret(key, group, encryption_password):
+def group_secret_names(group):
+    return secrets_file()[SECRETS_GROUPS].get(group, [])
+
+
+def secret_group(key):
+    groups = secrets_file()[SECRETS_GROUPS]
+    for g, s in groups.items():
+        if key in s:
+            return g
+
+    return None
+
+
+def decrypted_secret_group(group, encryption_password):
     file = secrets_file()
     groups = file[SECRETS_GROUPS]
     if group not in groups:
-        raise Exception(f"{group} doesn't exist in secret file")
+        raise Exception(f"{group} doesn't exist in the secret file")
 
-    decrypted_group = _decrypted_group_from_secrets_file(file, group, encryption_password)
+    return _decrypted_group_from_secrets_file(file, group, encryption_password)
+
+
+def decrypted_secret(key, group, encryption_password):
+    decrypted_group = decrypted_secret_group(group, encryption_password)
 
     if key not in decrypted_group:
         raise Exception(f"There is no {key} in group secrets. Available: {list(decrypted_group.keys())}")

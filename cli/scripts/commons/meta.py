@@ -209,6 +209,11 @@ def app_env_config(app):
     return json.loads(json_file)
 
 
+def deploy_config():
+    with open(current_env_file_path("deploy.json")) as f:
+        return json.load(f)
+
+
 def app_dir(app):
     return path.join(root_dir(), app[DIR])
 

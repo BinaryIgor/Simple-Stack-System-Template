@@ -1,7 +1,7 @@
 {
   "build_cmd": "bash build_cmd.bash",
   "volumes": [
-    "${CI_LOCAL_SECRETS_PATH}:/secrets:ro",
+    "${secrets-path}:/secrets:ro",
     "${PWD}/static:/static",
     "${PWD}/email-templates:/email-templates"
   ],
@@ -10,16 +10,20 @@
     "APP_PORT_FILE": "app_port.txt"
   },
   "env": {
-    "JVM_OPTS": "-Xmx450m",
+    "JVM_OPTS": "-Xmx750m",
     "SERVER_PORT": "$SERVER_PORT",
-    "ENV": "local",
+    "ENV": "prod",
     "DB_URL": "${db-url}",
     "DB_USER": "${db-user}",
     "DB_PASSWORD": "file:/secrets/db-password.txt",
     "JWT_TOKEN_KEY": "file:/secrets/jwt-token-key.txt",
     "POSTMARK_WEBHOOK_TOKEN": "file:/secrets/postmark-webhook-token.txt"
   },
-  "secrets": [],
+  "secrets": [
+    "db-password",
+    "jwt-token-key",
+    "postmark-webhook-token"
+  ],
   "pre_run_cmd": "export SERVER_PORT=$(cat app_port.txt)",
   "zero_downtime_deploy": {
     "upstream_nginx_dir": "${upstream-main-nginx-dir}",
@@ -27,5 +31,5 @@
     "app_health_check_url": "http://localhost:8081/actuator/health"
   },
   "network": "host",
-  "memory": "500M"
+  "memory": "1000M"
 }

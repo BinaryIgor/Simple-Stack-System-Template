@@ -3,7 +3,7 @@ set -e
 
 echo "Copying static files..."
 mkdir -p target/static
-rm -r target/static/*
+rm -rf target/static/*
 cp -r static/messages target/static/messages
 cp -r static/templates target/static/templates
 
