@@ -18,8 +18,13 @@ public class SecurityRules {
     }
 
     public void validateAccess(SecurityEndpoint endpoint,
+                               boolean privateClient,
                                Optional<AuthenticatedUser> user) {
         if (predicates.publicEndpoint.test(endpoint)) {
+            return;
+        }
+
+        if (privateClient && predicates.privateClientEndpoint.test(endpoint)) {
             return;
         }
 
@@ -44,6 +49,7 @@ public class SecurityRules {
     }
 
     public record Predicates(Predicate<SecurityEndpoint> publicEndpoint,
+                             Predicate<SecurityEndpoint> privateClientEndpoint,
                              BiPredicate<SecurityEndpoint, UserState> isUserOfStateAllowed,
                              Predicate<SecurityEndpoint> isBannedUserAllowed,
                              Predicate<SecurityEndpoint> adminEndpoint) {

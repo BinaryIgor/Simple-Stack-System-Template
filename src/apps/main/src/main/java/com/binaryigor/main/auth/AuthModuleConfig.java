@@ -1,7 +1,6 @@
 package com.binaryigor.main.auth;
 
 import com.binaryigor.main._common.app.Cookies;
-import com.binaryigor.main._contract.AuthClient;
 import com.binaryigor.main._contract.UserAuthClient;
 import com.binaryigor.main.auth.app.JwtConfig;
 import com.binaryigor.main.auth.app.SecurityEndpoints;
@@ -29,6 +28,7 @@ public class AuthModuleConfig {
     SecurityRules securityRules() {
         return new SecurityRules(new SecurityRules.Predicates(
                 SecurityEndpoints::isPublic,
+                SecurityEndpoints::isMetricEndpoint,
                 SecurityEndpoints::isUserOfStateAllowed,
                 //TODO: proper impl once we have ban mechanism
                 e -> false,
@@ -57,9 +57,11 @@ public class AuthModuleConfig {
                                   Cookies cookies,
                                   Clock clock,
                                   @Value("${jwt-issue-new-token-before-expiration-duration}")
-                                  Duration issueNewTokenBeforeExpirationDuration) {
+                                  Duration issueNewTokenBeforeExpirationDuration,
+                                  @Value("${allowed-private-ip-prefix}")
+                                  String allowedPrivateIpPrefix) {
         return new SecurityFilter(authTokenAuthenticator, securityRules, cookies, clock,
-                issueNewTokenBeforeExpirationDuration);
+                issueNewTokenBeforeExpirationDuration, allowedPrivateIpPrefix);
     }
 
     @Bean

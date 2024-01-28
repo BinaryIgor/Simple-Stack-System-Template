@@ -1,7 +1,7 @@
 {
   "app-url-file": "app_url.txt",
-  "current-main-app-url-file-path": "$PWD/../main/app_url.txt",
-  "upstream-main-nginx-dir": "$PWD/../nginx-main",
+  "current-main-app-url-file-path": "$PWD/../../main/latest/app_url.txt",
+  "upstream-main-nginx-dir": "$PWD/../../nginx-main/latest",
   "frontend-domain": "simple-stack-system-template.com",
   "static-path": "/home/simple-stack-system-template/static",
   "logs-path": "/home/simple-stack-system-template/system-logs",
@@ -18,5 +18,6 @@
   "db-root-user": "postgres",
   "db-root-name": "postgres",
   "db-user": "simple-stack-system-template",
-  "db-name": "simple-stack-system-template"
+  "db-name": "simple-stack-system-template",
+  "private-ip-range": "10.114.16.0/20"
 }

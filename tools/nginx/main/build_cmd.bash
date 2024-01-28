@@ -17,7 +17,7 @@ fi
 export nginx_container="nginx-main"
 # check if both proxying and proxied app are working properly
 # TODO: better place?
-export app_health_check_url="http://0.0.0.0:8081/actuator/health"
+export app_health_check_url="http://0.0.0.0:${HTTP_PORT}/actuator/health"
 
 envsubst '${nginx_container} ${app_health_check_url}' < template_update_app_url.bash > target/update_app_url.bash
 

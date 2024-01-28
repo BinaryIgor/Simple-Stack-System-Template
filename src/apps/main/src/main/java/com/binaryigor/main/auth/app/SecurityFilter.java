@@ -16,8 +16,11 @@ import org.springframework.http.HttpMethod;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.Duration;
+import java.util.Optional;
 
 public class SecurityFilter implements Filter {
+
+    static final String REAL_IP_HEADER = "x-real-ip";
 
     private static final String REDIRECT_ON_FAILED_AUTH_PAGE = "/sign-in";
     private static final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
@@ -26,17 +29,20 @@ public class SecurityFilter implements Filter {
     private final Cookies cookies;
     private final Clock clock;
     private final Duration issueNewTokenBeforeExpirationDuration;
+    private final String allowedPrivateIpPrefix;
 
     public SecurityFilter(AuthTokenAuthenticator authTokenAuthenticator,
                           SecurityRules securityRules,
                           Cookies cookies,
                           Clock clock,
-                          Duration issueNewTokenBeforeExpirationDuration) {
+                          Duration issueNewTokenBeforeExpirationDuration,
+                          String allowedPrivateIpPrefix) {
         this.authTokenAuthenticator = authTokenAuthenticator;
         this.securityRules = securityRules;
         this.cookies = cookies;
         this.clock = clock;
         this.issueNewTokenBeforeExpirationDuration = issueNewTokenBeforeExpirationDuration;
+        this.allowedPrivateIpPrefix = allowedPrivateIpPrefix;
     }
 
     @Override
@@ -55,7 +61,9 @@ public class SecurityFilter implements Filter {
 
             log.info("Auth result: {}", authResult);
 
-            securityRules.validateAccess(endpoint, authResult.map(AuthenticationResult::user));
+            securityRules.validateAccess(endpoint,
+                    isAllowedPrivateClientRequest(request),
+                    authResult.map(AuthenticationResult::user));
 
             authResult.ifPresent(r -> {
                 if (shouldIssueNewToken(r)) {
@@ -69,6 +77,19 @@ public class SecurityFilter implements Filter {
         } catch (AccessForbiddenException e) {
             sendExceptionResponse(request, response, 403, e);
         }
+    }
+
+    //TODO test
+    private boolean isAllowedPrivateClientRequest(HttpServletRequest request) {
+        var clientIp = Optional.ofNullable(request.getHeader(REAL_IP_HEADER))
+                .orElseGet(request::getRemoteAddr);
+
+        return clientIp.startsWith(allowedPrivateIpPrefix) || isLocalhost(clientIp);
+    }
+
+    private boolean isLocalhost(String clientIp) {
+        return clientIp.startsWith("localhost") || clientIp.startsWith("0.0.0.0") ||
+                clientIp.startsWith("127.0.0.1") || clientIp.startsWith("::1");
     }
 
     private boolean shouldIssueNewToken(AuthenticationResult result) {

@@ -45,6 +45,10 @@ public class SecurityEndpoints {
         return false;
     }
 
+    public static boolean isMetricEndpoint(SecurityEndpoint endpoint) {
+        return endpoint.url().startsWith("/actuator");
+    }
+
     //TODO: implement if needed
     public static boolean isUserOfStateAllowed(SecurityEndpoint endpoint, UserState state) {
         return true;

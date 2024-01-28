@@ -29,13 +29,13 @@ server:
   port: "${SERVER_PORT:8080}"
 
 management:
-  server:
-    port: "${MANAGEMENT_SERVER_PORT:8081}"
   endpoints:
     web:
       exposure:
         include: [ "health", "info", "prometheus" ]
 
+# Hidden behind nginx, so it's not that important!
+allowed-private-ip-prefix: "10.1"
 jwt:
   issuer: simple-stack-system-template
   token-key: "${JWT_TOKEN_KEY}"
