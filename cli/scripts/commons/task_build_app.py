@@ -2,6 +2,8 @@ import shutil
 from datetime import datetime
 from os import path
 
+import typing
+
 from . import meta
 
 # TODO: multi instances build and deploy
@@ -10,6 +12,7 @@ CI_ENV = "CI_ENV"
 CI_PACKAGE_TARGET = "CI_PACKAGE_TARGET"
 CI_BUILD_COMMONS = "CI_BUILD_COMMONS"
 CI_SKIP_TESTS = "CI_SKIP_TESTS"
+CI_DEPLOY_STATIC_PATH = "CI_DEPLOY_STATIC_PATH"
 
 SECRETS_ENV_PREFIX = "secrets:"
 FILE_ENV_PREFIX = "file:"
@@ -30,7 +33,7 @@ def execute(app, skip_commons=False, skip_tests=False, skip_docker_image_export=
 
     log.info(f"Config read, package will be created with tag: {tag}")
 
-    build_env = {}
+    build_env = {CI_DEPLOY_STATIC_PATH: meta.env_config()["static-path"]}
     if skip_commons:
         build_env[CI_BUILD_COMMONS] = "false"
     if skip_tests:
@@ -84,16 +87,23 @@ def _build_app(app_name, app_config, tag, build_env):
     """)
 
 
-def _build_cmd(app_env_config):
-    return app_env_config.get("build_cmd", "")
+def _build_cmd(app_config):
+    return single_or_multi_lines_str(app_config, "build_cmd")
+
+
+def single_or_multi_lines_str(app_config, key):
+    single_or_multi_lines = app_config.get(key, "")
+    if isinstance(single_or_multi_lines, typing.List):
+        return "\n".join(single_or_multi_lines)
+    return single_or_multi_lines
 
 
 def _pre_run_cmd(app_config):
-    return app_config.get("pre_run_cmd", "")
+    return single_or_multi_lines_str(app_config, "pre_run_cmd")
 
 
 def _post_run_cmd(app_config):
-    return app_config.get("post_run_cmd", "")
+    return single_or_multi_lines_str(app_config, "post_run_cmd")
 
 
 def _zero_downtime_deploy_config(app_config):

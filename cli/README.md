@@ -54,3 +54,4 @@ TODO
 * secrets: one file/multiple files encrypted with different secrets? Secret groups?
 * logs solution
 * Do not remove previous (backup) container for logs gathering/collection!
+* remove previous versioned assets (keep only a few recent ones)

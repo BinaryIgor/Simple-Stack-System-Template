@@ -20,7 +20,10 @@
     "POSTMARK_WEBHOOK_TOKEN": "file:/secrets/postmark-webhook-token.txt"
   },
   "secrets": [],
-  "pre_run_cmd": "export SERVER_PORT=$(cat app_port.txt)",
+  "pre_run_cmd": [
+    "export SERVER_PORT=$(cat app_port.txt)",
+    "bash copy_versioned_assets.bash"
+  ],
   "zero_downtime_deploy": {
     "upstream_nginx_dir": "${upstream-main-nginx-dir}",
     "app_url_file": "${app-url-file}",

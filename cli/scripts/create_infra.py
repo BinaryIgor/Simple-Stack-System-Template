@@ -88,6 +88,44 @@ def raise_response_exception(response, message):
      Body: {response.content}''')
 
 
+def create_vpc():
+    needed_vpc = infra.vpc()
+    needed_vpc_name = needed_vpc[NAME]
+
+    log.info(f"Needed vpc: {needed_vpc_name}, checking if exists")
+
+    ip_range = None
+
+    for vpc in resources.get(resources.VPCS):
+        v_name = vpc[NAME]
+
+        if v_name == needed_vpc_name:
+            log.info("VPC exists, no need to create it")
+            ip_range = vpc['ip_range']
+        else:
+            add_resources_to_delete(resources.VPCS, v_name, vpc[ID])
+
+    if ip_range:
+        return ip_range
+
+    log.info(f"Creating {needed_vpc_name} VPC...")
+
+    if dry_run:
+        ip_range = "10.dry.range.0/20"
+        log.info(f"VPC needs to created, returning {ip_range} instead!")
+        return ip_range
+
+    response = resources.create(resources.VPCS, needed_vpc)
+
+    if response.ok:
+        response_data = response.json()
+        log.info(f"Vpc created, response: {response_data}")
+
+        return response_data['vpc']['ip_range']
+
+    raise_response_exception(response, "Fail to create vpc")
+
+
 do_api_token = environ.get("DO_API_TOKEN")
 if not do_api_token:
     do_api_token = input("DO_API_TOKEN env not set, we need it to access Digital Ocean resources: ")
@@ -105,3 +143,15 @@ log.info("Creating tags, to group resources...")
 create_tags()
 print("...")
 time.sleep(3)
+
+print()
+log.info("Tags are ready, creating VPC...")
+print()
+
+internal_ip_range = create_vpc()
+print("...")
+time.sleep(3)
+
+print()
+log.info(f"VPC ip range {internal_ip_range}")
+print()

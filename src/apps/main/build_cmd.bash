@@ -29,6 +29,9 @@ cp -r $EMAIL_TEMPLATES_PATH target/email-templates
 bash build_static.bash
 echo
 
+export target_dir="${CI_DEPLOY_STATIC_PATH}"
+envsubst '${target_dir}' < template_copy_versioned_assets.bash > "$CI_PACKAGE_TARGET/copy_versioned_assets.bash"
+
 
 HTTP_PORT=$(shuf -i 10000-20000 -n 1)
 

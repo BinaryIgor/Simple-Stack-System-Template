@@ -80,7 +80,8 @@ def execute(app_name, deployment_machines=None, copy_only=False, local=False):
                 _perform_pre_deploy_actions(app_config=app_config,
                                             deploy_dir=latest_deploy_dir,
                                             machine_name=ah,
-                                            remote_host=remote_host)
+                                            remote_host=remote_host,
+                                            local=local)
 
                 _deploy_app(remote_host, latest_deploy_dir, local=local)
 
@@ -221,6 +222,7 @@ def _copy_app_package(machine_name,
 
     meta.write_to_file(local_deploy_env_file_path, f"""
     export {CI_MACHINE_NAME}="{machine_name}"
+    export {CI_DEPLOY_DIR}="{latest_deploy_dir}"
     {export_local_env}
     """.strip())
 
@@ -246,7 +248,7 @@ def _copy_app_package(machine_name,
         """, exit_on_failure=False)
 
 
-def _perform_pre_deploy_actions(app_config, machine_name, remote_host, deploy_dir):
+def _perform_pre_deploy_actions(app_config, machine_name, remote_host, deploy_dir, local):
     actions = app_config.get("pre_deploy_actions")
     if not actions:
         return
@@ -257,17 +259,20 @@ def _perform_pre_deploy_actions(app_config, machine_name, remote_host, deploy_di
         log.info("Skipping pre deploy actions locally...")
     else:
         log.info("Performing pre deploy actions")
-        _perform_deploy_actions(actions, machine_name, remote_host, deploy_dir)
+        _perform_deploy_actions(actions, machine_name, remote_host, deploy_dir, local=local)
 
 
-def _perform_deploy_actions(actions, machine_name, remote_host, deploy_dir):
+def _perform_deploy_actions(actions, machine_name, remote_host, deploy_dir, local):
     for a in actions:
         cmd = meta.content_with_replaced_placeholders(a, {
             CI_MACHINE_NAME: machine_name,
             CI_DEPLOY_DIR: deploy_dir
         })
         log.info(f"Executing: {cmd}")
-        meta.execute_bash_script(f'ssh {remote_host} "{cmd}"')
+        if local:
+            meta.execute_bash_script(cmd)
+        else:
+            meta.execute_bash_script(f'ssh {remote_host} "{cmd}"')
 
 
 def _deploy_app(remote_host, latest_deploy_dir, local):

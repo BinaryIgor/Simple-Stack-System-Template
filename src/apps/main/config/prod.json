@@ -24,7 +24,10 @@
     "jwt-token-key",
     "postmark-webhook-token"
   ],
-  "pre_run_cmd": "export SERVER_PORT=$(cat app_port.txt)",
+  "pre_run_cmd": [
+    "export SERVER_PORT=$(cat app_port.txt)",
+    "bash copy_versioned_assets.bash"
+  ],
   "zero_downtime_deploy": {
     "upstream_nginx_dir": "${upstream-main-nginx-dir}",
     "app_url_file": "${app-url-file}",

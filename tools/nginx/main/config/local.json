@@ -3,7 +3,7 @@
     "$PWD/conf:/etc/nginx/conf.d",
     "$PWD/fake-certs/fullchain.pem:/etc/certs/live/${frontend-domain}/fullchain.pem",
     "$PWD/fake-certs/privkey.pem:/etc/certs/live/${frontend-domain}/privkey.pem",
-    "$PWD/../../main/latest/static/assets:/usr/share/nginx/site:ro"
+    "${static-path}:/usr/share/nginx/site:ro"
   ],
   "build_cmd": "bash build_cmd.bash",
   "build_env": {
