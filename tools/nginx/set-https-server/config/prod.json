@@ -1,0 +1,8 @@
+{
+  "volumes": [
+    "${static-path}:/usr/share/nginx/site:ro"
+  ],
+  "network": "host",
+  "memory": "500M",
+  "cpus": "0.5"
+}

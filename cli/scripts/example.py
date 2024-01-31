@@ -1,4 +1,4 @@
-from commons import meta, crypto
+from commons import meta, crypto, infra
 
 log = meta.new_log("example")
 args = meta.cmd_args({
@@ -9,7 +9,7 @@ args = meta.cmd_args({
     "some_optional_arg": {
         "help": "Optional flag",
         "action": "store_false"}
-}, env_arg=False, script_description="""
+}, script_description="""
    Multiline script description.
     
     It even has some HTML:
@@ -20,6 +20,4 @@ args = meta.cmd_args({
 
 log.info(crypto.random_key())
 log.info(crypto.random_password())
-print(crypto.group_secret_names("internal"))
-encryption_password = input("encryption password:")
-print(crypto.decrypted_secret_group("internal", encryption_password))
+log.info(infra.droplets())

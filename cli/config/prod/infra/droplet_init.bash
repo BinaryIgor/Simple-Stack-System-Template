@@ -7,7 +7,7 @@ echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" | EDITOR='tee -a' visudo
 
 # Create SSH directory for sudo user and move keys over
 home_directory="$(eval echo ~${USERNAME})"
-mkdir --parents "$${home_directory}/.ssh"
+mkdir --parents "${home_directory}/.ssh"
 cp /root/.ssh/authorized_keys "$home_directory/.ssh"
 chmod 0700 "$home_directory/.ssh"
 chmod 0600 "$home_directory/.ssh/authorized_keys"
@@ -33,6 +33,16 @@ apt install docker-ce -y
 
 # Allow non root access to a docker
 usermod -aG docker ${USERNAME}
+# limit docker logs size
+echo '{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "5"
+  }
+}' > /etc/docker/daemon.json
+# restart docker so that changes can take an effect
+systemctl restart docker
 
 # Install prom node-exporter if enabled
 if [ "${INSTALL_PROMETHEUS_NODE_EXPORTER}" == "true" ]; then

@@ -307,3 +307,10 @@ def execute_bash_script(script, script_name=None, exit_on_failure=True):
 
     {script}
     """, script_name=script_name, exit_on_failure=exit_on_failure)
+
+
+def str_arg_as_list(arg):
+    if arg:
+        return [a.strip() for a in arg.split(",")]
+
+    return []

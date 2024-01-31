@@ -11,11 +11,9 @@
   "db-local-host": "localhost",
   "db-host": "localhost",
   "db-port": "5432",
-  "db-local-port": "5432",
   "db-root-user": "postgres",
   "db-root-name": "postgres",
   "db-user": "simple-stack-system-template",
   "db-name": "simple-stack-system-template",
-  "region": "",
   "private-ip-range": "10.114.16.0/20"
 }

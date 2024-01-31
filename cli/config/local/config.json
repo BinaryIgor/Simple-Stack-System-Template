@@ -14,7 +14,6 @@
   "db-local-host": "localhost",
   "db-host": "localhost",
   "db-port": "5432",
-  "db-local-port": "5432",
   "db-root-user": "postgres",
   "db-root-name": "postgres",
   "db-user": "simple-stack-system-template",

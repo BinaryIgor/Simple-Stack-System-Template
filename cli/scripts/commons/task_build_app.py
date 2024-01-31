@@ -24,10 +24,10 @@ LOAD_AND_RUN_APP_SCRIPT = "load_and_run_app.bash"
 log = meta.new_log("task_build_app")
 
 
-def execute(app, skip_commons=False, skip_tests=False, skip_docker_image_export=False):
-    log.info(f"About to read {app} app config...")
+def execute(app_name, skip_commons=False, skip_tests=False, skip_docker_image_export=False):
+    log.info(f"About to read {app_name} app config...")
 
-    app_config = meta.app_of_name(app)
+    app_config = meta.app_of_name(app_name)
 
     tag = _new_tag()
 
@@ -40,15 +40,15 @@ def execute(app, skip_commons=False, skip_tests=False, skip_docker_image_export=
         build_env[CI_SKIP_TESTS] = "true"
 
     log.info("About to build app...")
-    _build_app(app_name=app, app_config=app_config, tag=tag, build_env=build_env)
+    _build_app(app_name=app_name, app_config=app_config, tag=tag, build_env=build_env)
 
     print()
     log.info(f"App built, packaging it...")
-    _package_app(app_name=app, app_env_config=meta.app_env_config(app_config), image_tag=tag,
+    _package_app(app_name=app_name, app_env_config=meta.app_env_config(app_config), image_tag=tag,
                  skip_image_export=skip_docker_image_export)
 
     print()
-    log.info(f"{app} app is ready to deploy!")
+    log.info(f"{app_name} app is ready to deploy!")
 
 
 def _new_tag():

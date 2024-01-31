@@ -19,7 +19,7 @@ args = meta.cmd_args({
     },
 }, script_description="Script to build single app")
 
-task_build_app.execute(app=args["app"],
+task_build_app.execute(app_name=args["app"],
                        skip_commons=args["skip_commons"],
                        skip_tests=args["skip_tests"],
                        skip_docker_image_export=args["skip_docker_image_export"])

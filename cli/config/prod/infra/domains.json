@@ -1,3 +1,6 @@
-{
-  "main": "simple-stack-system-template.com"
-}
+[
+  {
+    "machine": "main",
+    "domain": "simple-stack-system-template.com"
+  }
+]

@@ -126,6 +126,240 @@ def create_vpc():
     raise_response_exception(response, "Fail to create vpc")
 
 
+def create_firewalls(internal_ip_range):
+    needed_firewalls_grouped_by_name = resources_grouped_by_name(infra.firewalls(internal_ip_range))
+
+    log.info(f"Needed firewalls: {needed_firewalls_grouped_by_name.keys()}, checking their existence...")
+
+    for f in resources.get(resources.FIREWALLS):
+        f_name = f[NAME]
+
+        needed_f = needed_firewalls_grouped_by_name.get(f_name)
+        if needed_f:
+            log.info(f"{f_name} firewall exists, skipping its creation")
+        else:
+            add_resources_to_delete(resources.FIREWALLS, f_name, f[ID])
+
+    print()
+
+    for f in needed_firewalls_grouped_by_name.values():
+        log.info(f"Creating firewall: {f}")
+
+        if dry_run:
+            log.info("Dry run, skipping creation")
+        else:
+            response = resources.create(resources.FIREWALLS, f)
+
+            f_name = f[NAME]
+
+            if response.ok:
+                log.info(f"{f_name} firewall created!")
+            else:
+                raise_response_exception(response, f"Fail to create {f_name} firewall")
+
+    print()
+
+
+def create_droplets():
+    needed_droplets_grouped_by_name = resources_grouped_by_name(infra.droplets())
+
+    log.info(f"Needed droplets: {needed_droplets_grouped_by_name.keys()}, checking their existence")
+
+    droplet_ids_to_droplet_and_volume_ids = {}
+
+    for d in resources.get(resources.DROPLETS):
+        d_name = d[NAME]
+
+        needed_d = needed_droplets_grouped_by_name.pop(d_name, None)
+        if needed_d:
+            log.info(f"{d_name} droplet exists, skipping its creation")
+            droplet_ids_to_droplet_and_volume_ids[d_name] = {
+                ID: d[ID],
+                VOLUME_IDS: d[VOLUME_IDS]
+            }
+        else:
+            add_resources_to_delete(resources.DROPLETS, d_name, d[ID])
+
+    print()
+
+    for d in needed_droplets_grouped_by_name.values():
+        d_name = d[NAME]
+        log.info(f"Creating droplet: {d_name}")
+
+        if dry_run:
+            print()
+            log.info("Dry run, skipping creation")
+            droplet_ids_to_droplet_and_volume_ids[d_name] = {
+                ID: random_id(),
+                VOLUME_IDS: []
+            }
+        else:
+            response = resources.create(resources.DROPLETS, d)
+
+            if response.ok:
+                log.info(f"{d_name} droplet is being created!")
+                created_droplet = response.json()["droplet"]
+                droplet_ids_to_droplet_and_volume_ids[d_name] = {
+                    ID: created_droplet[ID],
+                    VOLUME_IDS: []
+                }
+            else:
+                raise_response_exception(response, f"Fail to create {d_name} droplet")
+
+        print()
+
+    wait_for_droplets_creation()
+
+    return droplet_ids_to_droplet_and_volume_ids
+
+
+def resources_grouped_by_name(resources_list):
+    return {res[NAME]: res for res in resources_list}
+
+
+def random_id():
+    return random.randrange(1, 1_000_000)
+
+
+def wait_for_droplets_creation():
+    print()
+    log.info("Waiting for droplets creation, if needed...")
+    print()
+
+    while True:
+        new_droplets = []
+
+        for d in resources.get(resources.DROPLETS):
+            d_name = d[NAME]
+            d_status = d['status']
+
+            if d_status == 'new':
+                new_droplets.append(d_name)
+
+        if new_droplets:
+            log.info(f"Waiting for {new_droplets} droplets to become active...")
+            print("...")
+            time.sleep(10)
+        else:
+            log.info("All droplets are active!")
+            print()
+            break
+
+
+def create_volumes():
+    needed_volumes = infra.volumes()["volumes"]
+    needed_volumes_grouped_by_name = {v["name"]: v for v in needed_volumes}
+
+    log.info(f"Needed volumes: {needed_volumes_grouped_by_name.keys()}")
+    log.info("Checking what needs to be created...")
+
+    volume_names_to_ids = {}
+
+    for v in resources.get(resources.VOLUMES):
+        v_name = v['name']
+
+        needed_v = needed_volumes_grouped_by_name.pop(v_name)
+        if needed_v:
+            log.info(f"{v_name} volume exists, skipping its creation")
+            volume_names_to_ids[v_name] = v['id']
+        else:
+            log.info(f"{v_name} volume should be deleted")
+            resources_to_delete[resources.VOLUMES].append({
+                "name": v_name,
+                "id": v['id']
+            })
+
+    for v in needed_volumes_grouped_by_name.values():
+        v_name = v['name']
+        log.info(f"Creating volume: {v_name}")
+
+        if dry_run:
+            print()
+            log.info("Dry run, skipping creation")
+            volume_names_to_ids[v_name] = random_id()
+        else:
+            response = resources.create("volumes", v)
+
+            if response.ok:
+                log.info(f"{v_name} volume is being created!")
+                v_id = response.json()['volume']['id']
+                volume_names_to_ids[v_name] = v_id
+            else:
+                raise_response_exception(response, f"Fail to create {v_name} volume")
+
+        print()
+
+    return volume_names_to_ids
+
+
+def attach_volumes(droplet_ids_to_droplet_and_volume_ids, volume_names_to_ids):
+    attachments = infra.volumes()['attachments']
+    volume_ids_to_names = {v: k for k, v in volume_names_to_ids.items()}
+
+    log.info("Checking which volumes need to be attached to droplets...")
+    log.info(f"Desired state: {attachments}")
+    print()
+
+    for d in droplet_ids_to_droplet_and_volume_ids:
+        d_data = droplet_ids_to_droplet_and_volume_ids[d]
+
+        desired_droplet_volume = attachments.get(d)
+        if desired_droplet_volume:
+            attach_data = {
+                NAME: desired_droplet_volume,
+                ID: d_data[ID]
+            }
+        else:
+            attach_data = None
+
+        d_volume_names = [volume_ids_to_names[v] for v in d_data[VOLUME_IDS]]
+        attach = check_droplet_attached_volumes(d, d_data, desired_droplet_volume, d_volume_names)
+
+        if not attach or not attach_data:
+            log.info(f"{d} droplet doesn't need any volumes")
+            print()
+            continue
+
+        attach_volume_to_droplet(attach_data[NAME], d, d_data[ID])
+
+        print()
+
+
+def check_droplet_attached_volumes(droplet, droplet_data, desired_droplet_volume, droplet_volume_names):
+    attach = True
+
+    for vn in droplet_volume_names:
+        if desired_droplet_volume and desired_droplet_volume == vn:
+            attach = False
+            log.info(f"Volume already attached to {droplet} droplet, skipping")
+        else:
+            log.info(f"{resources.VOLUMES_ATTACHMENTS}: {vn} should be detached from {droplet} droplet")
+            resources_to_delete[resources.VOLUMES_ATTACHMENTS].append({
+                "volume_name": vn,
+                "droplet_name": droplet,
+                "droplet_id": droplet_data[ID]
+            })
+
+    return attach
+
+
+def attach_volume_to_droplet(v_name, d, d_id):
+    log.info(f"About to attach {v_name} volume to {d} droplet...")
+    if dry_run:
+        log.info(f"Dry run, skipping")
+    else:
+        response = resources.create(f"{resources.VOLUMES}/actions", {
+            "type": "attach",
+            "volume_name": v_name,
+            "droplet_id": d_id
+        })
+
+        if response.ok:
+            log.info(f"{v_name} volume is being attached to {d} droplet!")
+        else:
+            raise_response_exception(response, f"Fail to attach {v_name} volume to {d} droplet")
+
+
 do_api_token = environ.get("DO_API_TOKEN")
 if not do_api_token:
     do_api_token = input("DO_API_TOKEN env not set, we need it to access Digital Ocean resources: ")
@@ -155,3 +389,48 @@ time.sleep(3)
 print()
 log.info(f"VPC ip range {internal_ip_range}")
 print()
+
+log.info("VPC ready, creating firewalls with tags...")
+create_firewalls(internal_ip_range)
+print("...")
+time.sleep(3)
+
+print()
+log.info("Firewalls ready, creating droplets...")
+print()
+
+droplet_ids_to_volume_ids = create_droplets()
+print("...")
+time.sleep(3)
+
+print()
+log.info("Droplets are ready, but remember to initialize them, if created anew!")
+print()
+
+log.info("Creating volumes..")
+volume_names_to_ids = create_volumes()
+print("...")
+time.sleep(3)
+
+print()
+log.info("Volumes are ready, attaching them if needed...")
+print()
+
+attach_volumes(droplet_ids_to_volume_ids,  volume_names_to_ids)
+print("...")
+
+print()
+log.info("Volumes are attached!")
+print()
+
+log.info("Infrastructure is ready")
+
+log.info("Resources that are no longer used and should be deleted...")
+print()
+
+for r_type in resources_to_delete:
+    print(f"{r_type}:")
+    for r in resources_to_delete[r_type]:
+        print(r)
+
+    print()

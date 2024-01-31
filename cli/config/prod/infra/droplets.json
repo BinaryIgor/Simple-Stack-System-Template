@@ -8,11 +8,11 @@
     "backups": false,
     "ipv6": true,
     "monitoring": true,
-     "tags": [
+    "tags": [
       "ssh-access",
       "outbound-access",
       "web-server",
-       "postgres"
+      "postgres"
     ],
     "user_data": "${droplet_init.bash}"
   },
