@@ -51,6 +51,15 @@ db.create_user_if_does_not_exist(cur, db_reader_user, secrets["db-reader-passwor
 
 log.info(f"{db_user} and {db_reader_user} users for {db_name} created, rotating root password...")
 
-db.alter_user_password(cur, root_user, secrets['db-root-password'])
+root_password = secrets['db-root-password']
+db.alter_user_password(cur, root_user, root_password)
+
+log.info("Granting db rights...")
+db_conn = db.root_connection(root_user, root_password, db_name=db_name)
+
+cur = db_conn.cursor()
+
+db.grant_schema_privileges(cur, "public", db_user, privileges="ALL")
+db.grant_read_privileges(cur, db_reader_user, db_name)
 
 log.info("Db initialized")

@@ -18,7 +18,7 @@ def root_connection(root_user=None, root_password=None, db_name=None):
 
     conn = psycopg2.connect(host=db_host,
                             port=db_port,
-                            db_name=db_name if db_name else env_config["db-root-name"],
+                            dbname=db_name if db_name else env_config["db-root-name"],
                             user=root_user,
                             password=root_password,
                             connect_timeout=3)
@@ -55,7 +55,7 @@ def create_user_if_does_not_exist(cursor, user, password, db, privileges=None, c
 
     if privileges:
         log.info(f"Granting {privileges} privileges on {db} db to {user}")
-        cursor.execute(f'GRANT {privileges} ON DATABASE "{db}" to "{user}"')
+        cursor.execute(f'GRANT {privileges} ON DATABASE "{db}" TO "{user}"')
 
     if conn_limit:
         cursor.execute(f'ALTER USER "{user}" WITH CONNECTION LIMIT {conn_limit}')
@@ -76,12 +76,24 @@ def grant_read_privileges(cursor, user, db, schemas=None):
     for s in schemas:
         log.info(f"Granting read privileges to {user} on schema {s}")
         try:
+            grant_schema_privileges(cursor, s, user)
             cursor.execute(f"""
-            GRANT USAGE ON SCHEMA "{s}" TO "{user}";
             GRANT SELECT ON ALL TABLES IN SCHEMA "{s}" TO "{user}";
             """)
         except Exception:
             log.exception(f"Failed to grant permissions on {s} schema for {user}")
+
+
+def grant_schema_privileges(cursor, schema, user, privileges=None):
+    cursor.execute(f'GRANT USAGE ON SCHEMA "{schema}" TO "{user}"')
+
+    if privileges:
+        log.info(f"Granting {privileges} privileges on {schema} to {user}")
+        if privileges == "ALL":
+            cursor.execute(f'GRANT ALL ON  schema "{schema}" TO "{user}"')
+        else:
+            cursor.execute(f'GRANT {privileges} ON ALL TABLES IN SCHEMA "{schema}" TO "{user}"')
+            cursor.execute(f'GRANT {privileges} ON ALL SEQUENCES IN SCHEMA "{schema}" TO "{user}"')
 
 
 def alter_user_password(cursor, user, password):

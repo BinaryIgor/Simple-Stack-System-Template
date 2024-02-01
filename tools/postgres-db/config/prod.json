@@ -1,0 +1,13 @@
+{
+  "volumes": [
+    "/mnt/postgres_db_volume/data:/var/lib/postgresql/data"
+  ],
+  "env": {},
+  "secrets": {},
+  "memory": "500M",
+  "cpus": "1",
+  "network": "host",
+  "run_args": [
+    "-c 'config_file=/etc/postgresql/postgresql.conf'"
+  ]
+}
