@@ -31,7 +31,7 @@
   "zero_downtime_deploy": {
     "upstream_nginx_dir": "${upstream-main-nginx-dir}",
     "app_url_file": "${app-url-file}",
-    "app_health_check_url": "http://localhost:8081/actuator/health"
+    "app_health_check_path": "actuator/health"
   },
   "network": "host",
   "memory": "1000M"

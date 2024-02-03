@@ -13,7 +13,7 @@ args = meta.cmd_args(args_definition={
 
 env_config = meta.env_config()
 
-encryption_password = input("internal secrets group key: ")
+encryption_password = crypto.secret_input("internal secrets group key: ")
 secrets = crypto.decrypted_secret_group("internal", encryption_password)
 
 root_user = env_config["db-root-user"]

@@ -48,7 +48,7 @@ email:
   templates-dir: "${TEMPLATES_DIR:/email-templates}"
   postmark-api-token: "${POSTMARK_API_TOKEN}"
   postmark-webhook-token: "${POSTMARK_WEBHOOK_TOKEN}"
-  frontend-domain: "https://binaryigor.com"
+  frontend-domain: "https://simple-stack.binaryigor.com"
   from-email:
     name: "Simple Stack System Template App"
     email: "app@binaryigor.com"

@@ -1,0 +1,8 @@
+{
+  "volumes": [
+    "${logs-path}:/usr/share/nginx/site:ro"
+  ],
+  "network": "host",
+  "memory": "250M",
+  "cpus": "0.5"
+}

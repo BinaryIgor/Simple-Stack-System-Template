@@ -1,0 +1,14 @@
+{
+  "build_cmd": "bash build_cmd.bash",
+  "env": {
+    "LOGS_STORAGE_FILE_PATH": "/logs",
+    "JVM_OPTS": "-Xmx450m",
+    "SERVER_PORT": "${guardian-port}"
+  },
+  "volumes": [
+    "${logs-path}:/logs"
+  ],
+  "secrets": {},
+  "network": "host",
+  "memory": "500M"
+}

@@ -13,11 +13,15 @@ public class AlertsController {
 
     private static final Logger log = LoggerFactory.getLogger(AlertsController.class);
 
+    private final AlertsService service;
+
+    public AlertsController(AlertsService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public void add(@RequestBody PrometheusAlerts alerts) {
         log.info("Received {} prom alerts", alerts.alerts().size());
-        alerts.alerts().forEach(System.out::println);
-        System.out.println();
+        service.add(alerts.alerts());
     }
 }

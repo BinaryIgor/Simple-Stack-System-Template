@@ -1,6 +1,6 @@
 {
   "volumes": [
-    "/mnt/postgres_db_volume/data:/var/lib/postgresql/data"
+    "${db-volume-path}:/var/lib/postgresql/data"
   ],
   "env": {},
   "secrets": {},

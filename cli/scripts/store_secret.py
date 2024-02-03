@@ -26,12 +26,12 @@ log.info(f"About to store {name} secret in {group}...")
 
 secret_type = args["type"]
 if secret_type:
-    log.info("Value not given, generating tools one...")
+    log.info("Value not given, generating random one...")
     value = crypto.random_key() if secret_type == KEY else crypto.random_password()
 else:
-    value = input(f"{name} value: ")
+    value = crypto.secret_input(f"{name} value: ")
 
-password = input(f"{name} password: ")
+password = crypto.secret_input(f"{group} group password: ")
 
 secrets_file = crypto.secrets_file()
 

@@ -1,8 +1,7 @@
 #!/bin/bash
 
 export LOCAL_PORT=5432
-export REMOTE_PORT=25060
-export REMOTE_HOST="db-host"
+export LOCAL_PORT=5432
 
 echo "Tunneling postgres on a port: $LOCAL_PORT!"
 

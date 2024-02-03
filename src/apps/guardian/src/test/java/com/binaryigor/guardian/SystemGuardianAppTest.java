@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(value = {"integration"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"ENV=integration"})
-public class SimpleStackSystemTemplateGuardianAppTest {
+public class SystemGuardianAppTest {
 
     @Test
     void shouldStart() {

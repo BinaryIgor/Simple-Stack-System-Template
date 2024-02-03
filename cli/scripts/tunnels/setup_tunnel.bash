@@ -2,9 +2,9 @@
 set -euo pipefail
 
 local_port=${LOCAL_PORT:-9090}
-remote_port=${REMOTE_PORT:-9090}
+remote_port=${REMOTE_PORT:-$local_port}
 #TODO: generate it/add to readme
-host=${HOST:-"68.183.73.126"}
+host=${HOST:-"164.92.140.167"}
 remote_host=${REMOTE_HOST:-"0.0.0.0"}
 remote_user=${REMOTE_USER:-'simple-stack-system-template'}
 pid_file="/tmp/setup_tunnel.pid"

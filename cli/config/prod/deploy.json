@@ -4,27 +4,20 @@
   "deploy-dir": "/home/simple-stack-system-template/deploy",
   "machines": [
     {
-      "name": "main",
+      "name": "simple-stack-system-main",
       "hosts": [
-        "main"
+        "main",
+        "guardian",
+        "main-db"
       ],
       "apps": [
         "metrics-and-logs-collector",
         "main",
-        "nginx-main"
-      ]
-    },
-    {
-      "name": "guardian",
-      "hosts": [
-        "guardian"
-      ],
-      "apps": [
-        "metrics-and-logs-collector",
+        "nginx-main",
+        "postgres-db",
         "prometheus",
         "prometheus-alertmanager",
         "guardian",
-        "grafana",
         "nginx-logs-browser"
       ]
     }

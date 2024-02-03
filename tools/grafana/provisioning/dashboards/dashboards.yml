@@ -33,17 +33,6 @@ providers:
     options:
       path: /var/lib/grafana/dashboards/monitoring/application.json
 
-  - name: coturn
-    orgId: 1
-    folder: "Monitoring"
-    folderUid: "monitoring"
-    type: file
-    disableDeletion: false
-    editable: false
-    allowUiUpdates: false
-    options:
-      path: /var/lib/grafana/dashboards/monitoring/coturn.json
-
   - name: node
     orgId: 1
     folder: "Monitoring"

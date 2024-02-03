@@ -8,6 +8,8 @@ ID = "id"
 NAME = "name"
 VOLUME_IDS = "volume_ids"
 
+BETWEEN_RESOURCES_SLEEP = 1
+
 log = meta.new_log("create_infra")
 
 args = meta.cmd_args(
@@ -95,6 +97,7 @@ def create_vpc():
     log.info(f"Needed vpc: {needed_vpc_name}, checking if exists")
 
     ip_range = None
+    vpc_id = None
 
     for vpc in resources.get(resources.VPCS):
         v_name = vpc[NAME]
@@ -102,18 +105,20 @@ def create_vpc():
         if v_name == needed_vpc_name:
             log.info("VPC exists, no need to create it")
             ip_range = vpc['ip_range']
+            vpc_id = vpc[ID]
         else:
             add_resources_to_delete(resources.VPCS, v_name, vpc[ID])
 
     if ip_range:
-        return ip_range
+        return ip_range, vpc_id
 
     log.info(f"Creating {needed_vpc_name} VPC...")
 
     if dry_run:
         ip_range = "10.dry.range.0/20"
+        vpc_id = random_id()
         log.info(f"VPC needs to created, returning {ip_range} instead!")
-        return ip_range
+        return ip_range, vpc_id
 
     response = resources.create(resources.VPCS, needed_vpc)
 
@@ -121,7 +126,9 @@ def create_vpc():
         response_data = response.json()
         log.info(f"Vpc created, response: {response_data}")
 
-        return response_data['vpc']['ip_range']
+        vpc = response_data['vpc']
+
+        return vpc['ip_range'], vpc[ID]
 
     raise_response_exception(response, "Fail to create vpc")
 
@@ -134,7 +141,7 @@ def create_firewalls(internal_ip_range):
     for f in resources.get(resources.FIREWALLS):
         f_name = f[NAME]
 
-        needed_f = needed_firewalls_grouped_by_name.get(f_name)
+        needed_f = needed_firewalls_grouped_by_name.pop(f_name, None)
         if needed_f:
             log.info(f"{f_name} firewall exists, skipping its creation")
         else:
@@ -160,8 +167,8 @@ def create_firewalls(internal_ip_range):
     print()
 
 
-def create_droplets():
-    needed_droplets_grouped_by_name = resources_grouped_by_name(infra.droplets())
+def create_droplets(vpc_id):
+    needed_droplets_grouped_by_name = resources_grouped_by_name(infra.droplets(vpc_id))
 
     log.info(f"Needed droplets: {needed_droplets_grouped_by_name.keys()}, checking their existence")
 
@@ -225,6 +232,9 @@ def wait_for_droplets_creation():
     print()
     log.info("Waiting for droplets creation, if needed...")
     print()
+
+    # Eventual consistency of Digital Ocean: sometimes new droplets are not visible immediately after creation
+    time.sleep(1)
 
     while True:
         new_droplets = []
@@ -376,15 +386,15 @@ log.info("Creating tags, to group resources...")
 
 create_tags()
 print("...")
-time.sleep(3)
+time.sleep(BETWEEN_RESOURCES_SLEEP)
 
 print()
 log.info("Tags are ready, creating VPC...")
 print()
 
-internal_ip_range = create_vpc()
+internal_ip_range, vpc_id = create_vpc()
 print("...")
-time.sleep(3)
+time.sleep(BETWEEN_RESOURCES_SLEEP)
 
 print()
 log.info(f"VPC ip range {internal_ip_range}")
@@ -393,15 +403,15 @@ print()
 log.info("VPC ready, creating firewalls with tags...")
 create_firewalls(internal_ip_range)
 print("...")
-time.sleep(3)
+time.sleep(BETWEEN_RESOURCES_SLEEP)
 
 print()
 log.info("Firewalls ready, creating droplets...")
 print()
 
-droplet_ids_to_volume_ids = create_droplets()
+droplet_ids_to_volume_ids = create_droplets(vpc_id)
 print("...")
-time.sleep(3)
+time.sleep(BETWEEN_RESOURCES_SLEEP)
 
 print()
 log.info("Droplets are ready, but remember to initialize them, if created anew!")
@@ -410,13 +420,13 @@ print()
 log.info("Creating volumes..")
 volume_names_to_ids = create_volumes()
 print("...")
-time.sleep(3)
+time.sleep(BETWEEN_RESOURCES_SLEEP)
 
 print()
 log.info("Volumes are ready, attaching them if needed...")
 print()
 
-attach_volumes(droplet_ids_to_volume_ids,  volume_names_to_ids)
+attach_volumes(droplet_ids_to_volume_ids, volume_names_to_ids)
 print("...")
 
 print()

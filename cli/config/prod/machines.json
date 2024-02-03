@@ -1,14 +1,8 @@
 [
   {
-    "name": "main",
-    "public_ip": "138.68.127.89",
-    "private_ip": "10.114.16.6",
-    "public_ip6": "2a03:b0c0:3:d0::1d2a:7001"
-  },
-  {
-    "name": "guardian",
-    "public_ip": "68.183.73.126",
-    "private_ip": "10.114.16.5",
-    "public_ip6": "2a03:b0c0:3:d0::1d29:c001"
+    "name": "simple-stack-system-main",
+    "public_ip": "164.92.140.167",
+    "private_ip": "10.114.16.2",
+    "public_ip6": "2a03:b0c0:3:d0::545:a001"
   }
 ]

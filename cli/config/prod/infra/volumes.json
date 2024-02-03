@@ -5,13 +5,13 @@
     "So pg-volume will be mounted under /mnt/pg_volume path."
   ],
   "attachments": {
-    "main-postgres-db-droplet": "main-postgres-db-volume"
+    "simple-stack-system-main": "main-postgres-db-volume"
   },
   "volumes": [
     {
       "name": "main-postgres-db-volume",
       "description": "volume for main postgres db",
-      "size_gigabytes": 50,
+      "size_gigabytes": 25,
       "region": "${region}",
       "filesystem_type": "ext4"
     }

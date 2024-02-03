@@ -1,6 +1,6 @@
 package com.binaryigor.guardian.logs;
 
-import jakarta.annotation.PreDestroy;
+import com.binaryigor.guardian.logs.model.LogData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,30 +8,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/logs")
 public class LogsController {
 
     private static final Logger log = LoggerFactory.getLogger(LogsController.class);
+    private final LogsService service;
 
-    @PostMapping
-    void add(@RequestBody ContainersLogs logs) {
-        log.info("Received {} logs from {}", logs.logs().size(), logs.machine());
-        logs.logs().forEach(l -> {
-            var toPrintLog = l.logs();
-            if (toPrintLog.length() > 50) {
-                toPrintLog = toPrintLog.substring(0, 50) + "...";
-            }
-            System.out.println("Logs of %s container:".formatted(l.containerName()));
-            System.out.println(toPrintLog);
-        });
-        System.out.println();
+    public LogsController(LogsService service) {
+        this.service = service;
     }
 
-    @PreDestroy
-    public void cleanUp() {
-        System.out.println();
-        System.out.println("Cleaning up");
-        System.out.println();
+    @PostMapping
+    void add(@RequestBody ContainersLogs containersLogs) {
+        log.info("Received {} logs from {}", containersLogs.logs().size(), containersLogs.machine());
+        var logs = toLogsData(containersLogs);
+        service.add(logs);
+    }
+
+    public List<LogData> toLogsData(ContainersLogs logs) {
+        return logs.logs().stream()
+                .map(l -> {
+                    //TODO: do we care about from and to timestamps?
+                    return new LogData(logs.machine(), l.containerName(), l.logs());
+                })
+                .toList();
     }
 }

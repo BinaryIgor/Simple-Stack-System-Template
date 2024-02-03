@@ -13,10 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MetricsController {
 
     private static final Logger log = LoggerFactory.getLogger(MetricsController.class);
+
+    private final MetricsService service;
+
+    public MetricsController(MetricsService service) {
+        this.service = service;
+    }
+
     @PostMapping
     void add(@RequestBody ContainersMetrics metrics) {
         log.info("Received {} metrics from {}", metrics.metrics().size(), metrics.machine());
-        metrics.metrics().forEach(System.out::println);
-        System.out.println();
+        service.add(metrics);
     }
 }

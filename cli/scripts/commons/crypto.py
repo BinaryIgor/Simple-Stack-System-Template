@@ -1,9 +1,9 @@
 import base64
+import getpass
+import json
 import os
 import secrets
 import string
-import json
-
 from os import path
 
 from cryptography.fernet import Fernet
@@ -24,9 +24,9 @@ def random_key():
     return base64.b64encode(os.urandom(KEY_BYTES_LENGTH)).decode("ascii")
 
 
-def random_password():
+def random_password(length=PASSWORD_LENGTH):
     characters = list(PASSWORD_CHARACTERS)
-    return ''.join(secrets.choice(characters) for _ in range(PASSWORD_LENGTH))
+    return ''.join(secrets.choice(characters) for _ in range(length))
 
 
 def secrets_file():
@@ -131,7 +131,7 @@ def decrypted_data(data, password=None):
 
 def _given_or_from_input_password(password):
     if password is None:
-        password = input("Secrets password")
+        password = secret_input("Secrets password")
     return password
 
 
@@ -139,3 +139,7 @@ def decrypted_file(file_path, password):
     key = _password_to_fernet_key(password)
     data = meta.binary_file_content(file_path)
     return Fernet(key).decrypt(data).decode("utf8")
+
+
+def secret_input(prompt):
+    return getpass.getpass(prompt)

@@ -1,11 +1,15 @@
 {
   "env": {
-    "METRICS_TARGET_URL": "${monitor-url}/metrics",
+    "METRICS_TARGET_URL": "${guardian-url}/metrics",
+    "LOGS_TARGET_URL": "${guardian-url}/logs",
     "MACHINE_NAME": "${CI_MACHINE_NAME}",
-    "COLLECTION_INTERVAL": "10"
+    "COLLECTION_INTERVAL": "10",
+    "METRICS_COLLECTION_INTERVAL": "20",
+    "LOGS_COLLECTION_INTERVAL": "5"
   },
   "volumes": [
-    "/var/run/docker.sock:/var/run/docker.sock"
+    "/var/run/docker.sock:/var/run/docker.sock",
+    "/tmp/metrics-and-logs-collector:/tmp"
   ],
   "secrets": {},
   "network": "host",

@@ -15,6 +15,7 @@ chown --recursive "${USERNAME}":"${USERNAME}" "$home_directory/.ssh"
 
 # Disable root SSH login with password
 sed --in-place 's/^PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
+sed --in-place 's/^PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
 if sshd -t -q; then systemctl restart ssh; fi
 
 # Install docker & allow non sudo access

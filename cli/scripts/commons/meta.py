@@ -153,7 +153,9 @@ def cli_secrets_dir():
 
 
 def cli_target_dir():
-    return path.join(cli_root_dir(), "target")
+    target_dir = path.join(cli_root_dir(), "target")
+    create_dir(target_dir)
+    return target_dir
 
 
 def cli_app_package_dir(app_name):

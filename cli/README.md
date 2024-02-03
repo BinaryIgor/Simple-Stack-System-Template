@@ -55,3 +55,7 @@ TODO
 * logs solution
 * Do not remove previous (backup) container for logs gathering/collection!
 * remove previous versioned assets (keep only a few recent ones)
+* simplify collector
+  * export metrics directly to prom
+  * save files locally/push to sth simpler
+  * https://prometheus.github.io/client_python/getting-started/three-step-demo/

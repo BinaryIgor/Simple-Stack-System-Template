@@ -33,7 +33,7 @@ def firewalls(internal_ip_range):
     return json.loads(firewalls_file)
 
 
-def droplets():
+def droplets(vpc_id):
     setts = settings()
 
     droplet_init = meta.file_with_replaced_placeholders(path.join(infra_dir(), "droplet_init.bash"),
@@ -44,6 +44,8 @@ def droplets():
 
     # escapes " in json, but also puts double unnecessary " at the start and end; we need to get rid of that
     setts["droplet_init.bash"] = json.dumps(droplet_init).strip()[1:-1]
+
+    setts["vpc_id"] = vpc_id
 
     droplets_file = meta.file_with_replaced_placeholders(path.join(infra_dir(), "droplets.json"),
                                                          vars_replacement=setts,

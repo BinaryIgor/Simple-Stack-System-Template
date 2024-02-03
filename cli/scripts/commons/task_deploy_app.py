@@ -86,6 +86,8 @@ def execute(app_name, deployment_machines=None, copy_only=False, local=False):
                 _deploy_app(remote_host, latest_deploy_dir, local=local)
 
                 _check_app_status(app_name=app_name, remote_host=remote_host, local=local)
+
+            successful_deployments.append(ah)
         except KeyboardInterrupt:
             log.info("Deployment interrupted on a request!")
         except Exception:
@@ -191,7 +193,7 @@ def _decrypted_secrets(secret_names, secret_groups):
     secret_groups_encryption_passwords = {}
 
     for sg in secret_groups:
-        sg_password = input(f"{sg} group password: ")
+        sg_password = crypto.secret_input(f"{sg} group password: ")
         secret_groups_encryption_passwords[sg] = sg_password
 
     decrypted_secrets = {}

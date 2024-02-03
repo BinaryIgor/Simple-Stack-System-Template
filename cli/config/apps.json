@@ -35,7 +35,8 @@
     "name": "nginx-logs-browser",
     "dir": "tools/nginx/logs-browser"
   },
-   {
+  {
+    "__comment__": "To be run locally with tunnels",
     "name": "grafana",
     "dir": "tools/grafana"
   }

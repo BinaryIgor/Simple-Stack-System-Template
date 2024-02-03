@@ -1,10 +1,9 @@
 import shutil
+import typing
 from datetime import datetime
 from os import path
 
-import typing
-
-from . import meta
+from . import meta, crypto
 
 # TODO: multi instances build and deploy
 CI_REPO_ROOT_PATH = "CI_REPO_ROOT_PATH"
@@ -162,6 +161,12 @@ def _env_variable_value(var_value):
     # Python changes booleans from json to its representation, which starts with capital letter
     if str_value == 'True' or str_value == 'False':
         return str_value.lower()
+
+    if str_value.startswith(SECRETS_ENV_PREFIX):
+        secret = str_value.replace(SECRETS_ENV_PREFIX, "")
+        group, secret = secret.split(":", 1)
+        encryption_password = crypto.secret_input(f"{secret} needs {group} group password: ")
+        return crypto.decrypted_secret(secret, group, encryption_password=encryption_password)
 
     return str_value
 
@@ -323,7 +328,7 @@ def _run_app_script_placeholders_replacement(comment,
 
         app_health_check_path = zero_downtime_deploy_config.get("app_health_check_path")
         if app_health_check_path:
-            placeholders_replacement['app_health_check_url'] = f'{app_url}/${app_health_check_path}'
+            placeholders_replacement['app_health_check_url'] = f'{app_url}/{app_health_check_path}'
         else:
             placeholders_replacement['app_health_check_url'] = zero_downtime_deploy_config.get("app_health_check_url",
                                                                                                app_url)
