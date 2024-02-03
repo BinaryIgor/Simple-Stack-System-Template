@@ -1,5 +1,3 @@
-from os import path
-
 from commons import meta, crypto
 
 PASSWORD = "password"
@@ -28,7 +26,7 @@ log.info(f"About to store {name} secret in {group}...")
 
 secret_type = args["type"]
 if secret_type:
-    log.info("Value not given, generating random one...")
+    log.info("Value not given, generating tools one...")
     value = crypto.random_key() if secret_type == KEY else crypto.random_password()
 else:
     value = input(f"{name} value: ")
