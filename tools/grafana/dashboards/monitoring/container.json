@@ -100,7 +100,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.4",
+      "pluginVersion": "10.0.10",
       "targets": [
         {
           "datasource": {
@@ -109,14 +109,14 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "time() - monitoring_application_up_timestamp_seconds{application=\"$application\", machine=\"$machine\"}",
+          "expr": "time() - container_up_timestamp_seconds{container=\"$container\", machine=\"$machine\"}",
           "instant": true,
-          "legendFormat": "{{source}}-{{application}}-{{instance_id}}",
+          "legendFormat": "{{source}}-{{container}}",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "App instance health check",
+      "title": "Container instance health check",
       "transformations": [
         {
           "id": "convertFieldType",
@@ -194,7 +194,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.2.4",
+      "pluginVersion": "10.0.10",
       "targets": [
         {
           "datasource": {
@@ -203,16 +203,16 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "time() - monitoring_application_started_at_timestamp_seconds{application=\"$application\", machine=\"$machine\"}",
+          "expr": "time() - container_started_at_timestamp_seconds{container=\"$container\", machine=\"$machine\"}",
           "instant": true,
           "intervalFactor": 1,
-          "legendFormat": "{{source}}-{{application}}-{{instance_id}}",
+          "legendFormat": "{{source}}-{{container}}-{{instance_id}}",
           "range": false,
           "refId": "A",
           "step": 240
         }
       ],
-      "title": "App instance uptime",
+      "title": "Container instance uptime",
       "type": "stat"
     },
     {
@@ -301,7 +301,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "monitoring_application_used_memory_bytes{application=\"$application\", machine=\"$machine\"} / monitoring_application_max_memory_bytes{application=\"$application\", machine=\"$machine\"}",
+          "expr": "container_used_memory_bytes{container=\"$container\", machine=\"$machine\"} / container_max_memory_bytes{container=\"$container\", machine=\"$machine\"}",
           "legendFormat": "Memory usage",
           "range": true,
           "refId": "A"
@@ -396,7 +396,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "monitoring_application_cpu_usage_percent{application=\"$application\", machine=\"$machine\"}",
+          "expr": "container_cpu_usage_percent{container=\"$container\", machine=\"$machine\"}",
           "interval": "",
           "legendFormat": "CPU usage",
           "range": true,
@@ -491,7 +491,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "monitoring_application_used_memory_bytes{application=\"$application\", machine=\"$machine\"}",
+          "expr": "container_used_memory_bytes{container=\"$container\", machine=\"$machine\"}",
           "legendFormat": "Used memory",
           "range": true,
           "refId": "A"
@@ -502,7 +502,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "monitoring_application_max_memory_bytes{application=\"$application\", machine=\"$machine\"}",
+          "expr": "container_max_memory_bytes{container=\"$container\", machine=\"$machine\"}",
           "hide": false,
           "legendFormat": "Total memory",
           "range": true,
@@ -529,7 +529,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 10,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -538,11 +538,11 @@
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 3,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "auto",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -552,155 +552,24 @@
               "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
-          "unit": "dateTimeAsIso"
+          "unit": "none"
         },
         "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Errors"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Count INFO"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Warnings"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "light-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "ERROR"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "INFO"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "WARNING"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "light-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "count ERROR"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "count INFO"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "count WARNING"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "light-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
           {
             "__systemRef": "hideSeriesFrom",
             "matcher": {
@@ -708,7 +577,7 @@
               "options": {
                 "mode": "exclude",
                 "names": [
-                  "Errors"
+                  "info"
                 ],
                 "prefix": "All except:",
                 "readOnly": true
@@ -733,8 +602,7 @@
         "x": 12,
         "y": 14
       },
-      "id": 6,
-      "interval": "1m",
+      "id": 18,
       "options": {
         "legend": {
           "calcs": [],
@@ -743,11 +611,10 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.2.4",
       "targets": [
         {
           "datasource": {
@@ -755,31 +622,18 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "(monitoring_application_logs_warning_timestamp_seconds{application=\"$application\", machine=\"$machine\"} * 1000)  > $__from < $__to",
-          "legendFormat": "Warnings",
+          "expr": "sum by (level) (increase(container_logs_total{container=\"$container\", machine=\"$machine\"}[1m]))",
+          "legendFormat": "{{level}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
-          },
-          "editorMode": "code",
-          "expr": "(monitoring_application_logs_error_timestamp_seconds{application=\"$application\", machine=\"$machine\"} * 1000)  > $__from < $__to",
-          "hide": false,
-          "legendFormat": "Errors",
-          "range": true,
-          "refId": "B"
         }
       ],
-      "title": "Logs warnings/errors timestamps",
-      "transformations": [],
+      "title": "Log events",
       "type": "timeseries"
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 37,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -787,21 +641,21 @@
       {
         "current": {
           "selected": true,
-          "text": "nginx-api-gateway",
-          "value": "nginx-api-gateway"
+          "text": "nginx-main",
+          "value": "nginx-main"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "P1809F7CD0C75ACF3"
         },
-        "definition": "label_values(monitoring_application_up_timestamp_seconds, application)",
+        "definition": "label_values(container_up_timestamp_seconds, container)",
         "hide": 0,
         "includeAll": false,
         "multi": false,
-        "name": "application",
+        "name": "container",
         "options": [],
         "query": {
-          "query": "label_values(monitoring_application_up_timestamp_seconds, application)",
+          "query": "label_values(container_up_timestamp_seconds, container)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -813,14 +667,14 @@
       {
         "current": {
           "selected": false,
-          "text": "front-api",
-          "value": "front-api"
+          "text": "simple-stack-system-main",
+          "value": "simple-stack-system-main"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "P1809F7CD0C75ACF3"
         },
-        "definition": "label_values(monitoring_application_up_timestamp_seconds{application=\"$application\"}, machine)",
+        "definition": "label_values(container_up_timestamp_seconds{container=\"$container\"}, machine)",
         "hide": 0,
         "includeAll": false,
         "label": "machine",
@@ -828,7 +682,7 @@
         "name": "machine",
         "options": [],
         "query": {
-          "query": "label_values(monitoring_application_up_timestamp_seconds{application=\"$application\"}, machine)",
+          "query": "label_values(container_up_timestamp_seconds{container=\"$container\"}, machine)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -845,8 +699,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Application",
-  "uid": "application",
+  "title": "Container",
+  "uid": "container",
   "version": 1,
   "weekStart": ""
 }

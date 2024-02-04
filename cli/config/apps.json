@@ -16,10 +16,6 @@
     "dir": "tools/prometheus/alertmanager"
   },
   {
-    "name": "guardian",
-    "dir": "src/apps/guardian"
-  },
-  {
     "name": "metrics-and-logs-collector",
     "dir": "tools/metrics-and-logs-collector"
   },

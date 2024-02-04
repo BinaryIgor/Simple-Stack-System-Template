@@ -9,8 +9,8 @@ import metrics_exporter
 
 class ContainerLogs:
 
-    def __init__(self, name, logs):
-        self.name = name
+    def __init__(self, container, logs):
+        self.container = container
         self.logs = logs
 
 
@@ -35,28 +35,32 @@ def export(machine, container_logs):
 
 
 def _log_to_file(container_logs):
-    logger = containers_loggers.get(container_logs.name)
+    logger = containers_loggers.get(container_logs.container)
 
     if not logger:
         # TODO: more configurable
-        log_file = path.join(LOGS_DIR, f"{container_logs.name}.log")
+        container_logs_dir = path.join(LOGS_DIR, container_logs.container)
+
+        pathlib.Path(container_logs_dir).mkdir(exist_ok=True)
+        log_file = path.join(container_logs_dir, f"{container_logs.container}.log")
+
         handler = RotatingFileHandler(log_file, mode='a',
                                       maxBytes=10 * 1024 * 1024,
-                                      backupCount=25)
+                                      backupCount=50)
 
-        logger = logging.getLogger(container_logs.name)
+        logger = logging.getLogger(container_logs.container)
         logger.setLevel(level=logging.INFO)
         logger.addHandler(handler)
 
-        containers_loggers[container_logs.name] = logger
+        containers_loggers[container_logs.container] = logger
 
     logger.info(container_logs.logs)
 
 
 def _export_metrics(machine, container_logs):
-    levels_mapping = _logs_levels_mapping(container_logs.name)
+    levels_mapping = _logs_levels_mapping(container_logs.container)
     logs_level = _logs_level(levels_mapping, container_logs.logs)
-    metrics_exporter.on_new_container_logs(machine, container_logs.name, logs_level)
+    metrics_exporter.on_new_container_logs(machine, container_logs.container, logs_level)
 
 
 def _logs_levels_mapping(container):

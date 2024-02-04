@@ -5,8 +5,8 @@ from prometheus_client import start_http_server, Gauge, Counter
 
 class ContainerMetrics:
 
-    def __init__(self, name, started_at, timestamp, used_memory, max_memory, cpu_usage):
-        self.name = name
+    def __init__(self, container, started_at, timestamp, used_memory, max_memory, cpu_usage):
+        self.container = container
         self.started_at = started_at
         self.timestamp = timestamp
         self.used_memory = used_memory
@@ -17,9 +17,9 @@ class ContainerMetrics:
 # TODO: additional labels
 
 MACHINE_LABEL = "machine"
-NAME_LABEL = "name"
+CONTAINER_LABEL = "container"
 
-COMMONS_LABELS = [MACHINE_LABEL, NAME_LABEL]
+COMMONS_LABELS = [MACHINE_LABEL, CONTAINER_LABEL]
 
 collector_up_timestamp_gauge = Gauge("collector_up_timestamp_seconds", "TODO", [MACHINE_LABEL])
 
@@ -41,16 +41,16 @@ def on_next_collection(machine: str):
 
 
 def on_new_container_metrics(machine: str, metrics: ContainerMetrics):
-    container_started_at_timestamp_gauge.labels(machine=machine, name=metrics.name).set(metrics.started_at)
+    container_started_at_timestamp_gauge.labels(machine=machine, container=metrics.container).set(metrics.started_at)
 
     now_seconds = int(time.time())
-    container_up_timestamp_gauge.labels(machine=machine, name=metrics.name).set(now_seconds)
+    container_up_timestamp_gauge.labels(machine=machine, container=metrics.container).set(now_seconds)
 
-    container_used_memory_gauge.labels(machine=machine, name=metrics.name).set(metrics.used_memory)
-    container_max_memory_gauge.labels(machine=machine, name=metrics.name).set(metrics.max_memory)
+    container_used_memory_gauge.labels(machine=machine, container=metrics.container).set(metrics.used_memory)
+    container_max_memory_gauge.labels(machine=machine, container=metrics.container).set(metrics.max_memory)
 
-    container_cpu_usage_gauge.labels(machine=machine, name=metrics.name).set(metrics.cpu_usage)
+    container_cpu_usage_gauge.labels(machine=machine, container=metrics.container).set(metrics.cpu_usage)
 
 
 def on_new_container_logs(machine, container, level):
-    container_logs_total.labels(machine=machine, name=container, level=level).inc()
+    container_logs_total.labels(machine=machine, container=container, level=level).inc()

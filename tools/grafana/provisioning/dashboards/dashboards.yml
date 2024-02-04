@@ -22,7 +22,7 @@ providers:
     options:
       path: /var/lib/grafana/dashboards/monitoring/machine.json
 
-  - name: application
+  - name: container
     orgId: 1
     folder: "Monitoring"
     folderUid: "monitoring"
@@ -31,7 +31,7 @@ providers:
     editable: false
     allowUiUpdates: false
     options:
-      path: /var/lib/grafana/dashboards/monitoring/application.json
+      path: /var/lib/grafana/dashboards/monitoring/container.json
 
   - name: node
     orgId: 1

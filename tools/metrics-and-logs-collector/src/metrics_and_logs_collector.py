@@ -14,10 +14,6 @@ from docker.errors import NotFound
 import logs_exporter
 import metrics_exporter
 
-# logging.basicConfig(level=logging.INFO,
-#                     format="%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s",
-#                     datefmt="%Y-%m-%d %H:%M:%S")
-
 formatter = logging.Formatter("%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
@@ -48,8 +44,6 @@ SEND_LOGS_RETRIES = 10
 SEND_LOGS_RETRY_DELAY = 2
 
 EXPORTER_PORT = int(environ.get("EXPORTER_PORT", 8080))
-
-log.info(f"Testing log {datetime.now()}")
 
 
 class DockerContainers:
@@ -214,7 +208,8 @@ def gather_and_export_metrics(containers):
         c_metrics = fetched_container_metrics(container_id=c_id,
                                               container_name=c_name)
 
-        metrics_exporter.on_new_container_metrics(MACHINE_NAME, c_metrics)
+        if c_metrics:
+            metrics_exporter.on_new_container_metrics(MACHINE_NAME, c_metrics)
 
         log.info(f"{c_name}:{c_id} container metrics checked")
 
@@ -287,7 +282,7 @@ def fetched_container_metrics(container_id, container_name):
 def formatted_container_metrics(name, started_at, memory_metrics, cpu_metrics, precpu_metrics):
     try:
         cpu_usage = container_cpu_metrics(cpu_metrics, precpu_metrics)
-        return metrics_exporter.ContainerMetrics(name=name,
+        return metrics_exporter.ContainerMetrics(container=name,
                                                  started_at=started_at,
                                                  timestamp=current_timestamp(),
                                                  used_memory=memory_metrics["usage"],
