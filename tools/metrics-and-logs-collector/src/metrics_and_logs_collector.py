@@ -1,6 +1,7 @@
 import json
 import logging
 import random
+import re
 import signal
 import sys
 import time
@@ -8,24 +9,27 @@ from datetime import datetime
 from os import environ
 
 import docker
-import requests
 from docker.errors import NotFound
 
-logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s",
-                    datefmt="%Y-%m-%d %H:%M:%S")
+import logs_exporter
+import metrics_exporter
+
+# logging.basicConfig(level=logging.INFO,
+#                     format="%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s",
+#                     datefmt="%Y-%m-%d %H:%M:%S")
+
+formatter = logging.Formatter("%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
+sh = logging.StreamHandler()
+sh.setFormatter(formatter)
 
 log = logging.getLogger(__file__)
+log.setLevel(level=logging.INFO)
+log.addHandler(sh)
 
 CONTAINER_ID_FIELD = "containerId"
 CONTAINER_NAME_FIELD = "containerName"
 
 MACHINE_NAME = environ.get("MACHINE_NAME", "anonymous-machine")
-
-CONSOLE_METRICS_TARGET = "CONSOLE_METRICS_TARGET"
-CONSOLE_LOGS_TARGET = "CONSOLE_LOGS_TARGET"
-METRICS_TARGET_URL = environ.get("METRICS_TARGET_URL", CONSOLE_METRICS_TARGET)
-LOGS_TARGET_URL = environ.get("LOGS_TARGET_URL", CONSOLE_LOGS_TARGET)
 
 METRICS_COLLECTION_INTERVAL = int(environ.get("METRICS_COLLECTION_INTERVAL", 10))
 LOGS_COLLECTION_INTERVAL = int(environ.get("LOGS_COLLECTION_INTERVAL", 3))
@@ -42,6 +46,8 @@ SEND_METRICS_RETRY_DELAY = 2
 
 SEND_LOGS_RETRIES = 10
 SEND_LOGS_RETRY_DELAY = 2
+
+EXPORTER_PORT = int(environ.get("EXPORTER_PORT", 8080))
 
 log.info(f"Testing log {datetime.now()}")
 
@@ -139,15 +145,15 @@ def current_timestamp_millis():
 docker_containers = DockerContainers(connected_docker_client_retrying())
 
 
-def keep_collecting_and_sending():
+def keep_collecting_and_exporting():
     try:
-        do_keep_collecting_and_sending()
+        do_keep_collecting_and_exporting()
     except Exception:
         log_exception("Problem while collecting, retrying...")
-        keep_collecting_and_sending()
+        keep_collecting_and_exporting()
 
 
-def do_keep_collecting_and_sending():
+def do_keep_collecting_and_exporting():
     collection_interval = min(METRICS_COLLECTION_INTERVAL, LOGS_COLLECTION_INTERVAL)
     last_metrics_collection_timestamp = 0
     last_logs_collection_timestamp = 0
@@ -169,17 +175,19 @@ def do_keep_collecting_and_sending():
         should_gather_logs = timestamp - last_logs_collection_timestamp >= LOGS_COLLECTION_INTERVAL
 
         if should_gather_metrics:
-            gather_and_send_metrics(containers)
+            gather_and_export_metrics(containers)
             last_metrics_collection_timestamp = current_timestamp()
         if should_gather_logs:
             containers_last_log_check_timestamps = last_logs_checks_synced_with_running_containers(containers,
                                                                                                    containers_last_log_check_timestamps,
                                                                                                    default_last_log_check_timestamp=default_last_logs_collection_timestamp)
             default_last_logs_collection_timestamp = timestamp
-            gather_and_send_logs(containers, containers_last_log_check_timestamps)
+            gather_and_export_logs(containers, containers_last_log_check_timestamps)
             last_logs_collection_timestamp = current_timestamp()
 
         print("...")
+
+        metrics_exporter.on_next_collection(MACHINE_NAME)
 
         if shutdown.stop:
             log.info("Shutdown requested, exiting gracefully")
@@ -191,24 +199,33 @@ def do_keep_collecting_and_sending():
         time.sleep(collection_interval)
 
 
-def gather_and_send_metrics(containers):
+def gather_and_export_metrics(containers):
     log.info(f"Have {len(containers)} running containers, checking their metrics/stats...")
 
     last_metrics_read_at = current_timestamp()
 
-    c_metrics = containers_metrics(containers)
+    for c in containers:
+        c_id = c[CONTAINER_ID_FIELD]
+        c_name = c[CONTAINER_NAME_FIELD]
+
+        print()
+        log.info(f"Checking {c_name}:{c_id} container metrics...")
+
+        c_metrics = fetched_container_metrics(container_id=c_id,
+                                              container_name=c_name)
+
+        metrics_exporter.on_new_container_metrics(MACHINE_NAME, c_metrics)
+
+        log.info(f"{c_name}:{c_id} container metrics checked")
 
     print()
     log.info("Metrics checked.")
-    print()
-    send_metrics_if_present(c_metrics)
-
     print()
 
     update_last_data_read_at_file(LAST_METRICS_READ_AT_FILE_PATH, last_metrics_read_at)
 
 
-def containers_metrics(containers):
+def collect_and_export_containers_metrics(containers):
     containers_metrics = []
 
     for c in containers:
@@ -230,44 +247,6 @@ def containers_metrics(containers):
     return containers_metrics
 
 
-def send_metrics_if_present(c_metrics):
-    if c_metrics:
-        try:
-            log.info(f"Sending metrics of {len(c_metrics)} containers...")
-
-            metrics_object = {
-                'machine': MACHINE_NAME,
-                'metrics': c_metrics
-            }
-
-            if METRICS_TARGET_URL == CONSOLE_METRICS_TARGET:
-                log.info("Console metrics target...")
-                print(data_object_formatted(metrics_object))
-                print()
-            else:
-                send_metrics(metrics_object)
-
-            log.info("Metrics sent")
-        except Exception:
-            log_exception("Failed to send metrics...")
-    else:
-        log.info("No metrics to send")
-
-
-def send_metrics(containers_metrics):
-    for i in range(1 + SEND_METRICS_RETRIES):
-        try:
-            r = requests.post(METRICS_TARGET_URL, json=containers_metrics)
-            r.raise_for_status()
-            return
-        except Exception:
-            if i < SEND_METRICS_RETRIES:
-                log.info(f"Fail to send metrics, will retry in {SEND_METRICS_RETRY_DELAY}s")
-                time.sleep(SEND_METRICS_RETRY_DELAY)
-            else:
-                raise
-
-
 def fetched_container_metrics(container_id, container_name):
     try:
         log.info("Gathering metrics...")
@@ -279,16 +258,19 @@ def fetched_container_metrics(container_id, container_name):
 
         inspection_result = docker_containers.client.inspect_container(container_id)
         started_at = inspection_result['State'].get('StartedAt', datetime.utcnow().isoformat(sep="T"))
+        # make date format compatible with python iso format impl
+        started_at = re.sub("(\\.[0-9]+)", "", started_at).replace("Z", "")
+        started_at = int(datetime.fromisoformat(started_at).timestamp())
 
-        metrics_object = formatted_container_metrics(name=container_name,
-                                                     started_at=started_at,
-                                                     memory_metrics=memory_metrics,
-                                                     cpu_metrics=cpu_metrics,
-                                                     precpu_metrics=prev_cpu_metrics)
+        container_metrics = formatted_container_metrics(name=container_name,
+                                                        started_at=started_at,
+                                                        memory_metrics=memory_metrics,
+                                                        cpu_metrics=cpu_metrics,
+                                                        precpu_metrics=prev_cpu_metrics)
 
         log.info("Metrics gathered")
 
-        return metrics_object
+        return container_metrics
     except NotFound:
         log.info(f"Container {container_name}:{container_id} not found, skipping!")
         print()
@@ -304,14 +286,14 @@ def fetched_container_metrics(container_id, container_name):
 
 def formatted_container_metrics(name, started_at, memory_metrics, cpu_metrics, precpu_metrics):
     try:
-        return {
-            'containerName': name,
-            'startedAt': started_at,
-            'timestamp': current_timestamp_millis(),
-            'usedMemory': memory_metrics['usage'],
-            'maxMemory': memory_metrics['limit'],
-            'cpuUsage': container_cpu_metrics(cpu_metrics, precpu_metrics)
-        }
+        cpu_usage = container_cpu_metrics(cpu_metrics, precpu_metrics)
+        return metrics_exporter.ContainerMetrics(name=name,
+                                                 started_at=started_at,
+                                                 timestamp=current_timestamp(),
+                                                 used_memory=memory_metrics["usage"],
+                                                 max_memory=memory_metrics["limit"],
+                                                 cpu_usage=cpu_usage)
+
     except KeyError:
         # We get this, when docker_client.stats() return empty metrics for killed container. We don't care about that
         return None
@@ -339,31 +321,22 @@ def container_cpu_metrics(cpu_metrics, precpu_metrics):
     return 0
 
 
-def gather_and_send_logs(containers, containers_last_log_check_timestamps):
+def gather_and_export_logs(containers, containers_last_log_check_timestamps):
     log.info(f"Have {len(containers)} running containers, checking their logs...")
 
     last_logs_read_at = current_timestamp()
 
-    c_logs = []
-
     for c in containers:
         app = c[CONTAINER_NAME_FIELD]
-        print(f"Checking {app} logs...")
 
         last_logs_check_timestamp = containers_last_log_check_timestamps[app]
-        c_log = fetched_container_logs(containers_last_log_check_timestamps, last_logs_check_timestamp, app)
+        c_logs = fetched_container_logs(containers_last_log_check_timestamps, last_logs_check_timestamp, app)
 
-        if c_log:
-            c_logs.append({
-                "containerName": app,
-                "fromTimestamp": last_logs_check_timestamp * 1000,
-                "toTimestamp": containers_last_log_check_timestamps[app] * 1000,
-                "logs": c_log
-            })
+        if c_logs:
+            container_logs = logs_exporter.ContainerLogs(app, c_logs)
+            logs_exporter.export(MACHINE_NAME, container_logs)
 
         log.info(f"{app} logs checked")
-
-    send_logs_if_present(c_logs)
 
     print()
 
@@ -391,44 +364,6 @@ def fetched_container_logs(containers_last_log_check_timestamps, last_logs_check
     except Exception:
         log_exception("Failed to gather logs")
         return None
-
-
-def send_logs_if_present(c_logs):
-    if c_logs:
-        try:
-            log.info(f"Sending logs of {len(c_logs)} containers...")
-
-            logs_object = {
-                'machine': MACHINE_NAME,
-                'logs': c_logs
-            }
-
-            if LOGS_TARGET_URL == CONSOLE_LOGS_TARGET:
-                log.info("Console logs target...")
-                print(data_object_formatted(logs_object))
-                print()
-            else:
-                send_logs(logs_object)
-
-            log.info("Logs sent")
-        except Exception:
-            log_exception("Failed to send logs...")
-    else:
-        log.info("No logs to send")
-
-
-def send_logs(containers_logs):
-    for i in range(1 + SEND_LOGS_RETRIES):
-        try:
-            r = requests.post(LOGS_TARGET_URL, json=containers_logs)
-            r.raise_for_status()
-            return
-        except Exception:
-            if i < SEND_LOGS_RETRIES:
-                log.info(f"Fail to send logs, will retry in {SEND_LOGS_RETRY_DELAY}s")
-                time.sleep(SEND_LOGS_RETRY_DELAY)
-            else:
-                raise
 
 
 def initial_last_logs_gathered_timestamp():
@@ -468,4 +403,5 @@ def update_last_data_read_at_file(file, read_at):
         log_exception("Problem while updating last data read at file...")
 
 
-keep_collecting_and_sending()
+metrics_exporter.export(EXPORTER_PORT)
+keep_collecting_and_exporting()

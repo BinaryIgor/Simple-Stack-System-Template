@@ -1,0 +1,39 @@
+{
+  "default_levels_mapping": {
+    "warning_keywords": [
+      "WARNING",
+      "WARN"
+    ],
+    "error_keywords": [
+      "ERROR"
+    ]
+  },
+  "levels_mappings": [
+    {
+      "container_keywords": [
+        "nginx"
+      ],
+      "mapping": {
+        "warning_keywords": [
+          "warn",
+          "warning"
+        ],
+        "error_keywords": [
+          "[error]",
+          "[ERROR]",
+          "[crit]",
+          "[CRIT]",
+          "[alert]",
+          "[ALERT]",
+          "[emerg]",
+          "[EMERG]"
+        ],
+        "messages_to_ignore_errors": [
+          "SSL_do_handshake() failed",
+          "access forbidden by rule",
+          "limiting requests"
+        ]
+      }
+    }
+  ]
+}

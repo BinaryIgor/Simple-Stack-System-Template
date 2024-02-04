@@ -26,7 +26,7 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: [ 'localhost' ]
-  - job_name: guardian
-    metrics_path: "/actuator/prometheus"
+  - job_name: metrics-and-logs-collector
+    metrics_path: ""
     static_configs:
-      - targets: [ 'localhost:${GUARDIAN_PORT}' ]
+      - targets: [ 'localhost:${METRICS_AND_LOGS_COLLECTOR_PORT}' ]

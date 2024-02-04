@@ -12,7 +12,7 @@
   "build_env": {
     "ALERTMANAGER_PORT": "9093",
     "NODE_EXPORTER_PORT": "9100",
-    "GUARDIAN_PORT": "${guardian-port}",
+    "METRICS_AND_LOGS_COLLECTOR_PORT": "${metrics-and-logs-collector-port}",
     "INSTANCE_ALERT_TO_IGNORE_APPS_REGEX": ".+(backup|-logs-browser)$",
     "LOGS_ERRORS_ALERT_TO_IGNORE_APPS_REGEX": ".+(-logs-browser)$"
   },

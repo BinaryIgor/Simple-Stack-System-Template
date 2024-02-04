@@ -1,14 +1,4 @@
 groups:
-  - name: meta-alerts
-    rules:
-      - alert: PrometheusWasDown
-        # was prometheus down in the last 24h
-        expr: (time() - monitoring_prometheus_down_timestamp_seconds) < 86400
-        labels:
-          severity: critical
-        annotations:
-          summary: "Prometheus was DOWN"
-          description: "Prometheus was DOWN in the last 24h"
   - name: machine-alerts
     rules:
     - alert: HighMachineMemoryUsage
