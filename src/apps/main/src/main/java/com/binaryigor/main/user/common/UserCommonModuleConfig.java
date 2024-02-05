@@ -12,9 +12,10 @@ import com.binaryigor.main.user.common.core.repository.ActivationTokenRepository
 import com.binaryigor.main.user.common.core.repository.ActivationTokenStatusUpdateRepository;
 import com.binaryigor.main.user.common.core.repository.UserRepository;
 import com.binaryigor.main.user.common.infra.InMemoryActivationTokenRepository;
-import com.binaryigor.main.user.common.infra.InMemoryUserRepository;
 import com.binaryigor.main.user.common.infra.SqlUserClient;
+import com.binaryigor.main.user.common.infra.SqlUserRepository;
 import com.binaryigor.types.Transactions;
+import org.jooq.DSLContext;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,8 +40,8 @@ public class UserCommonModuleConfig {
     }
 
     @Bean
-    UserRepository userRepository() {
-        var repository = new InMemoryUserRepository();
+    UserRepository userRepository(DSLContext context) {
+        var repository = new SqlUserRepository(context);
 
         //TODO: remove!
         repository.create(new User(UUID.fromString("4644ca6f-8bbb-413f-9688-10b5692b5bcf"),

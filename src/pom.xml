@@ -30,7 +30,7 @@
         <!--dependencies-->
         <spring.boot.version>3.2.1</spring.boot.version>
         <postresql.driver.version>42.5.1</postresql.driver.version>
-        <hikari.version>3.4.2</hikari.version>
+        <hikari.version>5.1.0</hikari.version>
         <jooq.version>3.14.7</jooq.version>
         <slf4j.version>2.0.6</slf4j.version>
         <jackson.version>2.14.0</jackson.version>

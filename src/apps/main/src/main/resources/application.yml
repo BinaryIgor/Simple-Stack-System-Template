@@ -8,6 +8,8 @@ spring:
     username: "${DB_USER}"
     password: "${DB_PASSWORD}"
     pool-size: 5
+  liquibase:
+    change-log: classpath:liquibase/changelog.xml
   servlet:
     multipart:
       max-file-size: 2MB

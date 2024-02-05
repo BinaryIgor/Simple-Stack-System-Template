@@ -10,17 +10,23 @@ import com.binaryigor.types.Transactions;
 import com.binaryigor.types.event.AppEvents;
 import com.binaryigor.types.event.AppEventsPublisher;
 import com.binaryigor.types.event.InMemoryEvents;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultConfiguration;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import javax.sql.DataSource;
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -65,9 +71,32 @@ public class SimpleStackSystemTemplateConfig {
         return Clock.systemUTC();
     }
 
-    //TODO: real transactions
+//    @Bean
+//    public DataSource dataSource(@Value("${spring.datasource.url}") String jdbcUrl,
+//                                 @Value("${spring.datasource.username}") String username,
+//                                 @Value("${spring.datasource.password}") String password,
+//                                 @Value("${spring.datasource.pool-size}") int poolSize) {
+//        var config = new HikariConfig();
+//        config.setJdbcUrl(jdbcUrl);
+//        config.setUsername(username);
+//        config.setPassword(PropertiesConverter.valueOrFromFile(password));
+//        config.setMinimumIdle(poolSize);
+//        config.setMaximumPoolSize(poolSize);
+//
+//        return new HikariDataSource(config);
+//    }
+
+
     @Bean
-    public Transactions transactions() {
+    DataSource dataSource(DataSourceProperties props) {
+        return props
+                .initializeDataSourceBuilder()
+                .build();
+    }
+
+    //TODO
+    @Bean
+    public Transactions transactions(PlatformTransactionManager platformTransactionManager) {
         return new Transactions() {
             @Override
             public void execute(Runnable transaction) {
@@ -96,4 +125,11 @@ public class SimpleStackSystemTemplateConfig {
 //    ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
 //        return new ShallowEtagHeaderFilter();
 //    }
+
+    @Bean
+    DSLContext dslContext(DataSource dataSource) {
+        return DSL.using(new DefaultConfiguration()
+                .set(dataSource)
+                .set(SQLDialect.POSTGRES));
+    }
 }

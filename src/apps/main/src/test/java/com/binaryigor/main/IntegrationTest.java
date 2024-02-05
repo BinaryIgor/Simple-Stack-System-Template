@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.context.ServletWebServerInitializedE
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.TimeZone;
 
@@ -20,7 +21,14 @@ import java.util.TimeZone;
         properties = {"ENV=integration"})
 public abstract class IntegrationTest {
 
-//    protected static final CustomPostgreSQLContainer POSTGRES = CustomPostgreSQLContainer.instance();
+    private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:15");
+
+    static {
+        POSTGRESQL_CONTAINER.start();
+        System.setProperty("DB_URL", POSTGRESQL_CONTAINER.getJdbcUrl());
+        System.setProperty("DB_USER", POSTGRESQL_CONTAINER.getUsername());
+        System.setProperty("DB_PASSWORD", POSTGRESQL_CONTAINER.getPassword());
+    }
 
     static {
         //Prevent strange behavior during daylight saving time
