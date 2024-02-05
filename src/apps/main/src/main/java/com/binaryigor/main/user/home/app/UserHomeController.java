@@ -21,8 +21,17 @@ public class UserHomeController {
 
     @GetMapping("/home")
     String home(Model model) {
+        return homePage(model);
+    }
+
+    private String homePage(Model model) {
         var user = getCurrentUserDataHandler.handle(authUserClient.currentId());
         model.addAttribute("user", user);
-        return HTMX.fragmentOrFullPage( model, "user/home");
+        return HTMX.fragmentOrFullPage(model, "user/home");
+    }
+
+    @GetMapping("/")
+    String rootHome(Model model) {
+        return homePage(model);
     }
 }
